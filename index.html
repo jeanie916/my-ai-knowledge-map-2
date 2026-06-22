@@ -1,0 +1,3534 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI技术原理学习地图</title>
+<style>
+:root {
+  --bg:#0f1117; --bg2:#1a1d27; --bg3:#22263a; --border:#2e3350;
+  --accent:#5b8dee; --accent2:#a78bfa; --accent3:#34d399;
+  --accent4:#fb923c; --accent5:#f472b6; --text:#e2e8f0;
+  --text2:#94a3b8; --text3:#64748b; --bridge:#fbbf24;
+  --red:#ef4444; --green:#10b981; --cyan:#06b6d4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,17,23,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;padding:0 20px;height:52px;}
+.nav-logo{font-size:14px;font-weight:700;color:var(--accent);
+  margin-right:24px;white-space:nowrap;letter-spacing:.5px;}
+.nav-tabs{display:flex;gap:2px;flex:1;}
+.tab-btn{padding:6px 14px;border-radius:6px;border:none;
+  background:transparent;color:var(--text2);font-size:13px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab-btn:hover{background:var(--bg3);color:var(--text);}
+.tab-btn.active{background:var(--accent);color:#fff;}
+.nav-search{background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:5px 12px;color:var(--text);
+  font-size:13px;width:180px;outline:none;}
+.nav-search:focus{border-color:var(--accent);}
+
+/* LAYOUT */
+.layout{display:flex;margin-top:52px;min-height:calc(100vh - 52px);}
+
+/* SIDEBAR */
+.sidebar{width:210px;min-width:210px;background:var(--bg2);
+  border-right:1px solid var(--border);padding:16px 0;
+  position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+.sb-title{font-size:10px;font-weight:700;letter-spacing:1.5px;
+  color:var(--text3);padding:0 14px 6px;text-transform:uppercase;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 14px;
+  cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s;
+  border-left:2px solid transparent;}
+.sb-item:hover{background:var(--bg3);color:var(--text);}
+.sb-item.active{background:rgba(91,141,238,.12);color:var(--accent);
+  border-left-color:var(--accent);}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sb-section{margin-bottom:20px;}
+
+/* CONTENT */
+.content{flex:1;padding:28px 36px;max-width:1080px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* SECTION HEADER */
+.sec-h{font-size:22px;font-weight:700;margin-bottom:6px;}
+.sec-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.7;}
+
+/* ERA BLOCKS */
+.era-block{margin-bottom:10px;}
+.era-hd{display:flex;align-items:center;gap:10px;padding:13px 18px;
+  border-radius:10px;background:var(--bg2);border:1px solid var(--border);
+  cursor:pointer;transition:all .2s;user-select:none;}
+.era-hd:hover,.era-hd.open{border-color:var(--accent);background:var(--bg3);}
+.era-year{font-size:11px;font-weight:700;color:var(--accent);
+  background:rgba(91,141,238,.15);padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.era-title{font-size:14px;font-weight:600;flex:1;}
+.era-sub{font-size:11px;color:var(--text3);}
+.era-arrow{color:var(--text3);font-size:11px;transition:transform .2s;margin-left:4px;}
+.era-hd.open .era-arrow{transform:rotate(90deg);}
+.era-body{display:none;padding:0 2px;}
+.era-body.open{display:block;}
+
+/* EVENT CARDS */
+.ev-card{margin:8px 0 8px 18px;padding:16px 18px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;border-left:3px solid var(--accent);position:relative;}
+.ev-card::before{content:'';position:absolute;left:-12px;top:19px;
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  border:2px solid var(--bg);}
+.ev-title{font-size:13px;font-weight:600;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;
+  font-size:10px;font-weight:600;letter-spacing:.4px;}
+
+/* QA GRID */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.qa-item{background:var(--bg3);border-radius:6px;padding:9px 11px;}
+.qa-lbl{font-size:10px;font-weight:700;letter-spacing:1px;
+  margin-bottom:4px;text-transform:uppercase;}
+.qa-lbl.what{color:var(--accent);}
+.qa-lbl.why{color:var(--accent3);}
+.qa-lbl.how{color:var(--accent2);}
+.qa-lbl.sowhat{color:var(--accent4);}
+.qa-txt{font-size:12px;color:var(--text2);line-height:1.65;}
+
+/* ANNOTATION BOXES */
+.ann{border-radius:6px;padding:9px 12px;margin-top:8px;}
+.ann-lbl{font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:4px;}
+.ann-txt{font-size:12px;line-height:1.65;}
+.ann.bridge{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);}
+.ann.bridge .ann-lbl{color:var(--bridge);}
+.ann.bridge .ann-txt{color:#d4a843;}
+.ann.overthrow{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);}
+.ann.overthrow .ann-lbl{color:#f87171;}
+.ann.overthrow .ann-txt{color:#fca5a5;}
+.ann.extend{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);}
+.ann.extend .ann-lbl{color:var(--accent3);}
+.ann.extend .ann-txt{color:#6ee7b7;}
+
+/* GLOSSARY */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.f-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;}
+.f-btn:hover{border-color:var(--accent2);color:var(--text);}
+.f-btn.active{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+.g-card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:15px;transition:border-color .2s;}
+.g-card:hover{border-color:var(--accent2);}
+.g-term{font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:2px;}
+.g-en{font-size:11px;color:var(--text3);margin-bottom:8px;}
+.g-desc{font-size:12px;color:var(--text);line-height:1.6;margin-bottom:8px;}
+.g-note{font-size:11px;color:var(--text2);line-height:1.5;padding:7px 10px;background:rgba(99,102,241,.08);border-left:2px solid var(--accent2);border-radius:0 6px 6px 0;margin-bottom:8px;}
+.g-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.15);color:var(--accent2);}
+.g-def{font-size:12px;color:var(--text2);line-height:1.7;}
+.g-bridge{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);
+  font-size:11px;color:#d4a843;line-height:1.6;}
+.g-bridge::before{content:'🔗 桥接：';font-weight:600;}
+
+/* DIRECTIONS */
+.dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:20px;}
+.dir-card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;transition:all .2s;}
+.dir-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.dir-hd{padding:16px 18px;display:flex;align-items:center;gap:10px;}
+.dir-icon{font-size:22px;}
+.dir-name{font-size:15px;font-weight:700;}
+.dir-en{font-size:11px;color:rgba(255,255,255,.6);}
+.dir-body{padding:14px 18px;}
+.dir-phase{display:flex;gap:10px;padding:6px 0;
+  border-top:1px solid var(--border);font-size:12px;color:var(--text2);}
+.dir-yr{color:var(--accent);font-weight:600;white-space:nowrap;min-width:38px;}
+.dir-key{margin-top:10px;padding:8px 10px;background:var(--bg3);
+  border-radius:6px;font-size:11px;color:var(--text3);line-height:1.6;}
+
+/* PARADIGMS */
+.shift-list{margin-top:20px;}
+.shift-item{display:flex;gap:18px;margin-bottom:16px;padding:18px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;}
+.shift-num{font-size:28px;font-weight:900;color:var(--border);line-height:1;min-width:36px;}
+.shift-content{flex:1;}
+.shift-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.shift-period{font-size:11px;color:var(--accent);margin-bottom:8px;}
+.shift-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.shift-card{display:flex;gap:18px;margin-bottom:16px;padding:18px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;}
+.shift-body{flex:1;}
+.shift-why{margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6;padding:6px 10px;background:rgba(245,158,11,.07);border-left:2px solid var(--accent);border-radius:0 6px 6px 0;}
+.sw-lbl{font-weight:700;color:var(--accent);margin-right:6px;}
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.ba-before,.ba-after{padding:8px 10px;border-radius:6px;font-size:11px;line-height:1.6;}
+.ba-before{background:rgba(239,68,68,.08);color:#fca5a5;}
+.ba-after{background:rgba(52,211,153,.08);color:#6ee7b7;}
+.ba-before::before{content:'❌ 之前：';font-weight:600;display:block;margin-bottom:2px;}
+.ba-after::before{content:'✅ 之后：';font-weight:600;display:block;margin-bottom:2px;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* HIGHLIGHT */
+.hl{background:rgba(91,141,238,.2);border-radius:3px;padding:0 3px;}
+.hl-gold{background:rgba(251,191,36,.2);border-radius:3px;padding:0 3px;color:var(--bridge);}
+
+@media(max-width:860px){
+  .sidebar{display:none;}
+  .content{padding:16px;}
+  .qa-grid{grid-template-columns:1fr;}
+}
+
+/* ===== GLOSSARY EDIT MODE ===== */
+.g-card{position:relative;}
+.g-card-actions{position:absolute;top:10px;right:10px;display:flex;gap:5px;opacity:0;transition:opacity .15s;}
+.g-card:hover .g-card-actions{opacity:1;}
+.g-act-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);
+  border-radius:5px;padding:3px 7px;font-size:10px;cursor:pointer;transition:all .15s;}
+.g-act-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.g-act-btn.danger:hover{border-color:var(--red);color:var(--red);}
+.g-card.editing{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(167,139,250,.2);}
+.g-editable{outline:none;border-bottom:1px dashed var(--accent2);min-width:40px;display:inline-block;}
+.g-editable:focus{background:rgba(167,139,250,.08);border-radius:3px;}
+.g-edit-note{width:100%;background:var(--bg3);border:1px solid var(--accent2);
+  border-radius:6px;padding:7px 9px;color:var(--text);font-size:11px;
+  line-height:1.6;resize:vertical;min-height:60px;font-family:inherit;}
+.g-user-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:8px;
+  background:rgba(52,211,153,.15);color:var(--accent3);margin-left:6px;vertical-align:middle;}
+.g-toolbar{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.g-toolbar-btn{padding:4px 10px;border-radius:5px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:11px;cursor:pointer;transition:all .15s;}
+.g-toolbar-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.g-toolbar-btn.primary{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.g-toolbar-btn.primary:hover{opacity:.85;}
+
+/* ===== ADD GLOSSARY MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  padding:28px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  transform:translateY(16px);transition:transform .2s;}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:20px;color:var(--text);}
+.modal-field{margin-bottom:14px;}
+.modal-label{font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.modal-input{width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;outline:none;font-family:inherit;}
+.modal-input:focus{border-color:var(--accent2);}
+.modal-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:7px;padding:8px 11px;color:var(--text);font-size:12px;
+  line-height:1.6;resize:vertical;min-height:72px;outline:none;font-family:inherit;}
+.modal-textarea:focus{border-color:var(--accent2);}
+.modal-select{width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;outline:none;}
+.modal-select:focus{border-color:var(--accent2);}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+.modal-btn{padding:7px 18px;border-radius:7px;border:1px solid var(--border);
+  font-size:13px;cursor:pointer;transition:all .15s;}
+.modal-btn.cancel{background:transparent;color:var(--text2);}
+.modal-btn.cancel:hover{border-color:var(--text2);}
+.modal-btn.confirm{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.modal-btn.confirm:hover{opacity:.85;}
+.glossary-topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.glossary-topbar .filter-bar{margin-bottom:0;flex:1;}
+.gls-add-btn{padding:6px 14px;border-radius:7px;background:var(--accent2);
+  border:none;color:#fff;font-size:12px;cursor:pointer;white-space:nowrap;transition:opacity .15s;}
+.gls-add-btn:hover{opacity:.85;}
+.gls-io-btn{padding:5px 11px;border-radius:7px;background:transparent;
+  border:1px solid var(--border);color:var(--text2);font-size:11px;cursor:pointer;transition:all .15s;}
+.gls-io-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+
+/* ===== @TAG LINKS ===== */
+.at-link{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);
+  font-size:inherit;cursor:pointer;transition:color .15s;}
+.at-link:hover{color:var(--accent2);}
+
+/* ===== NOTEBOOK DRAWER ===== */
+.nb-drawer{position:fixed;top:52px;right:0;bottom:0;width:400px;max-width:95vw;
+  background:var(--bg2);border-left:1px solid var(--border);z-index:300;
+  display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
+.nb-drawer.open{transform:translateX(0);}
+.nb-hd{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.nb-title{flex:1;font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nb-close{background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:4px;}
+.nb-close:hover{background:var(--bg3);color:var(--text);}
+.nb-tabs{display:flex;border-bottom:1px solid var(--border);}
+.nb-tab{flex:1;padding:8px;text-align:center;font-size:12px;color:var(--text2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.nb-tab.active{color:var(--accent2);border-bottom-color:var(--accent2);}
+.nb-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.nb-editor{width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:12px;color:var(--text);font-size:12px;line-height:1.7;
+  resize:none;outline:none;font-family:'Cascadia Code','Consolas',monospace;min-height:320px;}
+.nb-editor:focus{border-color:var(--accent2);}
+.nb-preview{font-size:12px;line-height:1.8;color:var(--text);}
+.nb-preview h2{font-size:13px;color:var(--accent2);margin:14px 0 6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.nb-preview h3{font-size:12px;color:var(--accent3);margin:10px 0 4px;}
+.nb-preview p{margin-bottom:8px;color:var(--text2);}
+.nb-preview strong{color:var(--text);}
+.nb-preview em{color:var(--accent4);}
+.nb-preview ul,.nb-preview ol{padding-left:18px;margin-bottom:8px;color:var(--text2);}
+.nb-preview li{margin-bottom:3px;}
+.nb-preview blockquote{border-left:3px solid var(--accent2);padding:6px 12px;
+  background:rgba(167,139,250,.07);border-radius:0 6px 6px 0;margin:8px 0;color:var(--text2);}
+.nb-preview code{background:var(--bg3);padding:1px 5px;border-radius:3px;
+  font-family:monospace;font-size:11px;color:var(--accent3);}
+.nb-preview hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.nb-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.nb-save-btn{padding:6px 16px;border-radius:6px;background:var(--accent2);
+  border:none;color:#fff;font-size:12px;cursor:pointer;transition:opacity .15s;}
+.nb-save-btn:hover{opacity:.85;}
+.nb-status{font-size:11px;color:var(--text3);flex:1;}
+.nb-card-btn{position:absolute;top:10px;right:10px;background:var(--bg3);
+  border:1px solid var(--border);color:var(--text2);border-radius:5px;
+  padding:3px 7px;font-size:10px;cursor:pointer;opacity:0;transition:all .15s;z-index:2;}
+.ev-card{position:relative;}
+.ev-card:hover .nb-card-btn{opacity:1;}
+.ev-card:hover .nb-card-btn{border-color:var(--accent2);color:var(--accent2);}
+
+/* ===== MY QUESTIONS TAB ===== */
+.q-topbar{display:flex;gap:10px;margin-bottom:20px;align-items:center;flex-wrap:wrap;}
+.q-add-btn{padding:6px 14px;border-radius:7px;background:var(--accent);
+  border:none;color:#fff;font-size:12px;cursor:pointer;transition:opacity .15s;}
+.q-add-btn:hover{opacity:.85;}
+.q-filter-bar{display:flex;gap:6px;flex:1;}
+.q-f-btn{padding:4px 11px;border-radius:16px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:11px;cursor:pointer;transition:all .15s;}
+.q-f-btn:hover,.q-f-btn.active{border-color:var(--accent);color:var(--accent);}
+.q-list{display:flex;flex-direction:column;gap:10px;}
+.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;transition:border-color .2s;}
+.q-card:hover{border-color:var(--border);}
+.q-card-hd{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.q-status{padding:2px 9px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;margin-top:1px;}
+.q-status.todo{background:rgba(251,191,36,.15);color:#fbbf24;}
+.q-status.done{background:rgba(52,211,153,.15);color:#34d399;}
+.q-status.doubt{background:rgba(239,68,68,.15);color:#ef4444;}
+.q-text{font-size:13px;color:var(--text);flex:1;line-height:1.5;}
+.q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.q-date{font-size:10px;color:var(--text3);}
+.q-link{font-size:10px;color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);cursor:pointer;}
+.q-link:hover{color:var(--accent2);}
+.q-actions{display:flex;gap:5px;margin-left:auto;}
+.q-act{background:none;border:1px solid var(--border);color:var(--text2);
+  border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;transition:all .15s;}
+.q-act:hover{border-color:var(--accent2);color:var(--accent2);}
+.q-act.del:hover{border-color:var(--red);color:var(--red);}
+.q-empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:13px;}
+
+/* ===== ANALYSIS MAP — 四层导航地图 ===== */
+
+/* 层容器 */
+.fmap-layer{margin-bottom:32px;}
+.fmap-layer-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.fmap-layer-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.fmap-layer-title{font-size:15px;font-weight:700;}
+.fmap-layer-sub{font-size:12px;color:var(--text3);margin-left:4px;}
+
+/* 连接箭头 */
+.fmap-arrow{text-align:center;color:var(--text3);font-size:18px;margin:-16px 0 16px;
+  letter-spacing:2px;user-select:none;}
+
+/* 第一层：四象限 */
+.fmap-quadrants{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fmap-quad{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;transition:all .2s;position:relative;}
+.fmap-quad:hover{border-color:var(--accent);transform:translateY(-1px);}
+.fmap-quad.bet{border-left:3px solid var(--accent3);}/* Russell押注 */
+.fmap-quad-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+.fmap-quad-en{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.fmap-quad-desc{font-size:11px;color:var(--text2);line-height:1.65;}
+.fmap-quad-bet{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:10px;background:rgba(52,211,153,.15);color:var(--accent3);}
+.fmap-quad-links{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px;}
+.fmap-link{font-size:10px;padding:2px 8px;border-radius:4px;cursor:pointer;
+  background:rgba(91,141,238,.1);color:var(--accent);border:1px solid rgba(91,141,238,.2);
+  transition:all .15s;white-space:nowrap;}
+.fmap-link:hover{background:rgba(91,141,238,.25);border-color:var(--accent);}
+.fmap-link.ev{background:rgba(167,139,250,.1);color:var(--accent2);border-color:rgba(167,139,250,.2);}
+.fmap-link.ev:hover{background:rgba(167,139,250,.25);border-color:var(--accent2);}
+
+/* 第二层：PEAS */
+.fmap-peas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.fmap-peas-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 14px;text-align:center;transition:border-color .2s;}
+.fmap-peas-letter{font-size:28px;font-weight:900;line-height:1;margin-bottom:6px;}
+.fmap-peas-name{font-size:12px;font-weight:700;margin-bottom:6px;}
+.fmap-peas-q{font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5;}
+.fmap-peas-eg{font-size:10px;color:var(--text2);background:var(--bg3);border-radius:6px;
+  padding:6px 8px;text-align:left;line-height:1.6;}
+
+/* 第三层：环境七维度 */
+.fmap-dims{display:flex;flex-direction:column;gap:8px;}
+.fmap-dim-row{display:grid;grid-template-columns:130px 1fr 1fr;gap:0;
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;
+  transition:border-color .2s;}
+.fmap-dim-row:hover{border-color:var(--accent);}
+.fmap-dim-name{padding:10px 14px;font-size:12px;font-weight:700;
+  background:var(--bg3);display:flex;align-items:center;border-right:1px solid var(--border);}
+.fmap-dim-opt{padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.5;
+  border-right:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.fmap-dim-opt:last-child{border-right:none;}
+.fmap-dim-opt-lbl{font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:2px;}
+.fmap-dim-opt-lbl.easy{color:var(--accent3);}
+.fmap-dim-opt-lbl.hard{color:var(--accent4);}
+.fmap-dim-algo{font-size:10px;color:var(--text3);margin-top:4px;line-height:1.8;}
+.fmap-dim-algo .tag-group{display:block;margin-bottom:1px;}
+.fmap-dim-algo .tag-group-lbl{font-size:9px;color:var(--text3);opacity:.7;margin-right:3px;letter-spacing:.3px;}
+.fmap-dim-algo span{display:inline-block;border-radius:3px;
+padding:1px 5px;margin:1px 2px 1px 0;cursor:pointer;transition:all .15s;font-size:10px;}
+/* 算法：具体可执行的计算步骤 → 蓝 */
+.fmap-dim-algo span.algo{background:rgba(91,141,238,.12);color:var(--accent);}
+.fmap-dim-algo span.algo:hover{background:rgba(91,141,238,.25);}
+/* 方法/范式：一类做法的总称 → 绿 */
+.fmap-dim-algo span.method{background:rgba(52,211,153,.12);color:var(--accent3);}
+.fmap-dim-algo span.method:hover{background:rgba(52,211,153,.25);}
+/* 学习范式：端到端的学习框架 → 橙 */
+.fmap-dim-algo span.paradigm{background:rgba(251,146,60,.12);color:#fb923c;}
+.fmap-dim-algo span.paradigm:hover{background:rgba(251,146,60,.25);}
+/* 理论框架：分析工具，非算法 → 紫 */
+.fmap-dim-algo span.theory{background:rgba(167,139,250,.15);color:var(--accent2);}
+.fmap-dim-algo span.theory:hover{background:rgba(167,139,250,.3);}
+
+/* 第四层：四种架构 */
+.fmap-archs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.fmap-arch{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:14px;transition:all .2s;display:flex;flex-direction:column;gap:8px;}
+.fmap-arch:hover{border-color:var(--accent2);transform:translateY(-1px);}
+.fmap-arch-num{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;}
+.fmap-arch-name{font-size:13px;font-weight:700;}
+.fmap-arch-en{font-size:10px;color:var(--text3);}
+.fmap-arch-core{font-size:11px;color:var(--text2);line-height:1.6;
+  background:var(--bg3);border-radius:6px;padding:7px 9px;}
+.fmap-arch-when{font-size:10px;color:var(--text3);line-height:1.5;}
+.fmap-arch-when strong{color:var(--accent4);}
+.fmap-arch-links{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;}
+
+/* 使用说明条 */
+.fmap-howto{background:rgba(91,141,238,.06);border:1px solid rgba(91,141,238,.15);
+  border-radius:10px;padding:12px 16px;margin-bottom:24px;
+  font-size:12px;color:var(--text2);line-height:1.8;}
+.fmap-howto strong{color:var(--accent);}
+
+@media(max-width:860px){
+  .fmap-quadrants{grid-template-columns:1fr;}
+  .fmap-peas{grid-template-columns:1fr 1fr;}
+  .fmap-archs{grid-template-columns:1fr 1fr;}
+  .fmap-dim-row{grid-template-columns:100px 1fr 1fr;}
+}
+
+/* ===== BRIDGE TAGS — 研究方向/范式转变桥接标签 ===== */
+.bridge-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);align-items:center;}
+.bridge-row-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;white-space:nowrap;margin-right:2px;}
+.br-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:3px 9px;
+  border-radius:12px;cursor:pointer;transition:all .15s;white-space:nowrap;border:1px solid transparent;}
+.br-tag.timeline{background:rgba(91,141,238,.1);color:var(--accent);border-color:rgba(91,141,238,.2);}
+.br-tag.timeline:hover{background:rgba(91,141,238,.25);border-color:var(--accent);}
+.br-tag.glossary{background:rgba(167,139,250,.1);color:var(--accent2);border-color:rgba(167,139,250,.2);}
+.br-tag.glossary:hover{background:rgba(167,139,250,.25);border-color:var(--accent2);}
+.br-tag.analysismap{background:rgba(52,211,153,.1);color:var(--accent3);border-color:rgba(52,211,153,.2);}
+.br-tag.analysismap:hover{background:rgba(52,211,153,.25);border-color:var(--accent3);}
+.br-tag.persons{background:rgba(251,146,60,.1);color:#fb923c;border-color:rgba(251,146,60,.2);}
+.br-tag.persons:hover{background:rgba(251,146,60,.25);border-color:#fb923c;}
+
+/* ===== CONTEXT PANEL — 右侧关联浮动面板 ===== */
+.ctx-panel{position:fixed;top:52px;right:0;bottom:0;width:320px;max-width:90vw;
+  background:var(--bg2);border-left:1px solid var(--border);z-index:200;
+  display:flex;flex-direction:column;transform:translateX(100%);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);}
+.ctx-panel.open{transform:translateX(0);}
+.ctx-hd{padding:14px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;}
+.ctx-title{flex:1;font-size:13px;font-weight:700;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ctx-close{background:none;border:none;color:var(--text2);font-size:16px;
+  cursor:pointer;padding:2px 6px;border-radius:4px;}
+.ctx-close:hover{background:var(--bg3);color:var(--text);}
+.ctx-body{flex:1;overflow-y:auto;padding:14px 16px;}
+.ctx-section{margin-bottom:18px;}
+.ctx-sec-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:8px;}
+.ctx-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;
+  background:var(--bg3);border-radius:7px;margin-bottom:6px;cursor:pointer;
+  border:1px solid transparent;transition:all .15s;}
+.ctx-item:hover{border-color:var(--accent);background:rgba(91,141,238,.06);}
+.ctx-item-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.ctx-item-body{flex:1;min-width:0;}
+.ctx-item-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.ctx-item-sub{font-size:10px;color:var(--text2);line-height:1.5;}
+.ctx-empty{font-size:12px;color:var(--text3);text-align:center;padding:20px 0;}
+
+/* ===== PERSONS TAB — 人物志 ===== */
+.persons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:20px;}
+.person-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:all .2s;cursor:pointer;}
+.person-card:hover{border-color:var(--accent2);transform:translateY(-2px);}
+.person-card.open .person-body{display:block;}
+.person-hd{padding:16px 18px;display:flex;align-items:center;gap:12px;}
+.person-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;border:2px solid rgba(255,255,255,.1);}
+.person-meta{flex:1;min-width:0;}
+.person-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.person-en{font-size:11px;color:var(--text3);margin-bottom:4px;}
+.person-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.person-tag{font-size:9px;padding:1px 7px;border-radius:8px;font-weight:600;letter-spacing:.3px;}
+.person-arrow{color:var(--text3);font-size:11px;transition:transform .2s;flex-shrink:0;}
+.person-card.open .person-arrow{transform:rotate(90deg);}
+.person-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border);}
+.person-section{margin-top:12px;}
+.person-sec-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:6px;}
+.person-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.person-contrib-list{display:flex;flex-direction:column;gap:5px;}
+.person-contrib{display:flex;gap:8px;font-size:12px;color:var(--text2);line-height:1.5;}
+.person-contrib::before{content:'▸';color:var(--accent3);flex-shrink:0;}
+.person-relations{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.person-rel{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:3px 9px;
+  border-radius:10px;cursor:pointer;transition:all .15s;}
+.person-rel.student{background:rgba(91,141,238,.1);color:var(--accent);border:1px solid rgba(91,141,238,.2);}
+.person-rel.student:hover{background:rgba(91,141,238,.25);}
+.person-rel.teacher{background:rgba(167,139,250,.1);color:var(--accent2);border:1px solid rgba(167,139,250,.2);}
+.person-rel.teacher:hover{background:rgba(167,139,250,.25);}
+.person-rel.collab{background:rgba(52,211,153,.1);color:var(--accent3);border:1px solid rgba(52,211,153,.2);}
+.person-rel.collab:hover{background:rgba(52,211,153,.25);}
+.person-rel.rival{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);}
+.person-rel.rival:hover{background:rgba(239,68,68,.25);}
+.person-bridge-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);}
+.persons-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.persons-search{background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:6px 12px;color:var(--text);font-size:12px;outline:none;width:200px;}
+.persons-search:focus{border-color:var(--accent2);}
+.persons-topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-logo">🧠 AI技术原理学习地图</div>
+  <div class="nav-tabs">
+<button class="tab-btn active" onclick="switchTab('analysismap')" id="tab-am">🗺️ 分析地图</button>
+<button class="tab-btn" onclick="switchTab('timeline')">📅 历史演进</button>
+    <button class="tab-btn" onclick="switchTab('glossary')">📖 核心概念</button>
+    <button class="tab-btn" onclick="switchTab('directions')">🔬 研究方向</button>
+    <button class="tab-btn" onclick="switchTab('paradigms')">🔄 范式转变</button>
+    <button class="tab-btn" onclick="switchTab('persons')">👤 人物志</button>
+    <button class="tab-btn" onclick="switchTab('myquestions')" id="tab-myq">💡 我的问题</button>
+  </div>
+  <input class="nav-search" type="text" placeholder="🔍 全局搜索..." oninput="globalSearch(this.value)">
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-title">时代分区</div>
+      <div class="sb-item" onclick="jumpEra('era-1950')"><div class="sb-dot" style="background:#5b8dee"></div>1950s 符号主义起源</div>
+      <div class="sb-item" onclick="jumpEra('era-1980')"><div class="sb-dot" style="background:#a78bfa"></div>1980s 连接主义复兴</div>
+      <div class="sb-item" onclick="jumpEra('era-1990')"><div class="sb-dot" style="background:#34d399"></div>1990s 统计学习崛起</div>
+      <div class="sb-item" onclick="jumpEra('era-2006')"><div class="sb-dot" style="background:#fb923c"></div>2006 深度学习突破</div>
+      <div class="sb-item" onclick="jumpEra('era-2012')"><div class="sb-dot" style="background:#f472b6"></div>2012 深度学习爆发</div>
+      <div class="sb-item" onclick="jumpEra('era-2017')"><div class="sb-dot" style="background:#06b6d4"></div>2017 Transformer革命</div>
+      <div class="sb-item" onclick="jumpEra('era-2020')"><div class="sb-dot" style="background:#fbbf24"></div>2020 大模型时代</div>
+      <div class="sb-item" onclick="jumpEra('era-2022')"><div class="sb-dot" style="background:#ef4444"></div>2022 RLHF与对齐</div>
+      <div class="sb-item" onclick="jumpEra('era-2024')"><div class="sb-dot" style="background:#10b981"></div>2024 推理与Agent</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-title">研究方向</div>
+      <div class="sb-item" onclick="switchTab('directions')"><span class="badge" style="background:#1d4ed8">NLP</span> 自然语言处理</div>
+      <div class="sb-item" onclick="switchTab('directions')"><span class="badge" style="background:#065f46">CV</span> 计算机视觉</div>
+      <div class="sb-item" onclick="switchTab('directions')"><span class="badge" style="background:#78350f">RL</span> 强化学习</div>
+      <div class="sb-item" onclick="switchTab('directions')"><span class="badge" style="background:#4c1d95">GEN</span> 生成模型</div>
+      <div class="sb-item" onclick="switchTab('directions')"><span class="badge" style="background:#7f1d1d">AGT</span> Agent系统</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <!-- TIMELINE PANEL -->
+    <div class="panel" id="panel-timeline">
+      <div class="sec-h">AI技术原理 · 历史演进时间轴</div>
+      <div class="sec-sub">从1950年代图灵测试到2025年推理模型，梳理AI七十年核心技术脉络。<br>
+        每个节点包含 <span class="hl">What / Why / How / So What</span> 四维解析，以及 <span class="hl-gold">🔗 桥接注释</span>（连接你已有的统计/分析知识）。</div>
+      <div id="timeline-content">
+<div class="era-block" id="era-1950">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">1950&#8211;1969</span>
+  <span class="era-title">符号主义起源 &middot; AI的诞生</span>
+  <span class="era-sub">图灵测试 &middot; 感知机 &middot; 逻辑推理</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#5b8dee">
+<div class="ev-title">&#129514; 图灵测试 &middot; 《计算机器与智能》
+  <span class="badge" style="background:#1e3a5f;color:#93c5fd">1950</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">图灵提出"机器能思考吗"，设计模仿游戏（图灵测试）：若机器对话无法被人类区分，则认为它具有智能。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">计算机刚出现，需要一个可操作的"智能"定义。图灵绕开哲学争论，用行为主义标准定义智能。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">纯概念框架，无算法。核心思想：智能 = 行为表现，而非内部机制。这是AI领域第一个可测量的目标定义。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">奠定AI作为独立学科的合法性。图灵测试至今仍是讨论AGI的参照系，ChatGPT被很多人视为"通过了图灵测试"。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">图灵测试的"行为主义"立场，和你在商业分析中用"结果指标"而非"内部机制"评估策略效果是同一种思维——我们无法直接观测"智能"，只能观测行为输出。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#5b8dee">
+<div class="ev-title">&#127963; 达特茅斯会议 &middot; "人工智能"命名
+  <span class="badge" style="background:#1e3a5f;color:#93c5fd">1956</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">麦卡锡、明斯基等人正式提出"人工智能"术语，确立AI作为独立研究领域。主流路径：符号主义——用逻辑规则和符号操作表示知识。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">当时研究者相信人类智能的每个方面都可被精确描述并由机器模拟。乐观主义盛行，认为20年内可解决AI问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">代表系统：通用问题求解器（GPS）、LISP语言。核心方法：将知识编码为逻辑规则，用推理引擎执行推断。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">确立了AI第一个主流范式——符号主义。这个范式统治AI领域约30年，直到1980年代才被连接主义挑战。</div></div>
+</div>
+</div>
+
+<div class="ev-card" style="border-left-color:#5b8dee">
+<div class="ev-title">&#128302; 感知机 &middot; 神经网络的第一次尝试
+  <span class="badge" style="background:#1e3a5f;color:#93c5fd">1958</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Rosenblatt提出感知机（Perceptron）：模拟单个神经元，接收多个输入，加权求和后通过阈值函数输出0或1。神经网络的原型。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">受神经科学启发，试图用数学模型模拟大脑神经元。与符号主义的"规则编程"路线形成对立——连接主义的起点。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">输出 = sign(w1*x1 + w2*x2 + ... + b)。权重w通过"感知机学习规则"更新：预测错误时调整权重。这是最早的机器学习算法之一。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">1969年明斯基证明感知机无法解决XOR问题（线性不可分），导致神经网络研究进入第一次寒冬（1969-1980）。但其加权求和结构是所有现代神经网络的基础。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">感知机的 w1*x1 + w2*x2 + b 和你熟悉的<strong>线性回归</strong>几乎是同一个公式！区别只在于：线性回归输出连续值，感知机输出0/1。神经网络本质上是"很多个线性回归叠加 + 非线性变换"。</div></div>
+<div class="ann overthrow"><div class="ann-lbl">&#9889; 被推翻</div>
+  <div class="ann-txt">明斯基《感知机》(1969)：数学证明单层感知机无法解决非线性问题（如XOR），导致神经网络研究资金断绝，进入"AI第一次寒冬"（1969-1980）。</div></div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-1980">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">1980&#8211;1995</span>
+  <span class="era-title">连接主义复兴 &middot; 反向传播的诞生</span>
+  <span class="era-sub">多层神经网络 &middot; 专家系统兴衰 &middot; CNN雏形</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#a78bfa">
+<div class="ev-title">&#9881; 反向传播算法（Backpropagation）
+  <span class="badge" style="background:#2e1065;color:#c4b5fd">1986</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Rumelhart、Hinton等人推广反向传播：通过链式法则，将预测误差从输出层"反向"传播到每一层，计算每个权重对误差的贡献，从而更新权重。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">感知机只有一层，无法解决非线性问题。多层网络理论上可以，但没有有效训练方法。反向传播解决了"如何训练多层网络"这个核心问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">核心：梯度下降 + 链式法则。定义损失函数L（预测值与真实值的差距），对每个权重w求偏导数dL/dw，沿梯度反方向更新：w = w - alpha * dL/dw（alpha为学习率）。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">神经网络从单层扩展到多层，理论上可拟合任意复杂函数。连接主义复兴。但受限于计算力和数据量，真正爆发要等到2006年。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>梯度下降</strong>直觉：想象你在山上蒙眼找最低点，每次感受脚下坡度（梯度），往最陡下坡方向走一小步（学习率alpha）。这和你在A/B测试中"逐步调整策略参数直到指标最优"是同一个优化逻辑。<br><br><strong>链式法则</strong>来自微积分：复合函数求导。如果y=f(g(x))，则dy/dx = f'(g(x)) * g'(x)。多层网络就是多层复合函数，链式法则让我们能逐层计算梯度。</div></div>
+<div class="ann extend"><div class="ann-lbl">&#127807; 学派传承</div>
+  <div class="ann-txt">延伸自1960年代控制论（Cybernetics）和Widrow-Hoff学习规则（1960）。反向传播数学原理更早由Linnainmaa（1970）提出，但Rumelhart等人将其应用于神经网络训练并推广。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#a78bfa">
+<div class="ev-title">&#127981; 专家系统的兴衰
+  <span class="badge" style="background:#2e1065;color:#c4b5fd">1980&#8211;1990</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">专家系统：将人类专家知识编码为"IF-THEN"规则库，用推理引擎进行逻辑推断。代表：MYCIN（医疗诊断）、XCON（计算机配置）。符号主义的顶峰。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">企业界大量投资，认为只要把专家知识编码进去，就能自动化专业决策。1980年代AI商业化的第一次浪潮。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">知识工程师访谈专家，手工编写规则。推理引擎执行规则匹配。完全依赖人工编写规则，无学习能力。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">1987年后崩溃：维护成本极高、无法处理规则之外的情况、知识获取瓶颈。导致"AI第二次寒冬"（1987-1993）。教训：知识不能全靠手工编码，必须让机器自己学习。</div></div>
+</div>
+<div class="ann overthrow"><div class="ann-lbl">&#9889; 被推翻</div>
+  <div class="ann-txt">专家系统的失败证明了符号主义的根本局限：现实世界的知识太复杂、太模糊，无法用有限规则穷举。这为统计学习方法的崛起铺平了道路。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#a78bfa">
+<div class="ev-title">&#128202; LeNet &middot; 卷积神经网络雏形
+  <span class="badge" style="background:#2e1065;color:#c4b5fd">1989&#8211;1998</span>
+  <span class="badge" style="background:#065f46;color:#6ee7b7">CV</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">LeCun提出LeNet：专门用于图像识别的卷积神经网络（CNN）。引入卷积层（局部感受野）和池化层（降采样），成功识别手写数字（MNIST数据集）。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">普通全连接网络处理图像时参数量爆炸（256x256图像有65536个输入）。CNN利用图像的局部相关性，大幅减少参数。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">卷积核（filter）在图像上滑动，提取局部特征（边缘、纹理）。多层卷积逐步提取从低级到高级的特征。<strong>权重共享</strong>：同一个卷积核在整张图上复用，大幅减少参数。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">CNN成为计算机视觉的基础架构。2012年AlexNet将其推向主流。今天手机里的人脸识别、医疗影像分析都基于CNN原理。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">卷积的"局部感受野+权重共享"思想，类似于你在数据分析中用<strong>滑动窗口</strong>计算移动平均——不是看全局，而是关注局部模式，然后在整个序列上复用同一个计算逻辑。</div></div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-1990">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">1990&#8211;2005</span>
+  <span class="era-title">统计学习崛起 &middot; 机器学习的黄金时代</span>
+  <span class="era-sub">SVM &middot; 贝叶斯 &middot; 集成方法 &middot; 核方法</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#34d399">
+<div class="ev-title">&#9822; 深蓝 &middot; 符号搜索的巅峰
+  <span class="badge" style="background:#064e3b;color:#6ee7b7">1997</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">IBM 深蓝（Deep Blue）以 3.5:2.5 击败国际象棋世界冠军卡斯帕罗夫，成为首个在正式比赛中战胜人类顶级棋手的计算机程序。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">国际象棋是完全可观测 + 确定性 + 序贯决策的经典环境，理论上可以用搜索穷举所有可能走法。问题是博弈树规模爆炸（约 10^120 个节点），必须用启发式剪枝控制搜索深度。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">核心技术：α-β 剪枝（删除不可能更优的分支）+ 专家手工编写的局面评估函数（棋子价值、位置控制、王的安全等）+ 专用硬件并行搜索。每秒评估约 2 亿个棋局，搜索深度达 12 层。没有学习，没有概率，纯粹是"把搜索做到极致"。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">深蓝是「基于目标的智能体」的历史巅峰：目标明确（将死对方）、环境完全可观测、靠搜索+评估函数达成目标。但它的局限也同样清晰——评估函数完全依赖人类专家知识，换一个游戏就要从头重写。2016 年 AlphaGo 用强化学习自动学习评估函数，彻底超越了这条路线。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">深蓝和 AlphaGo 的对比是理解 AI 范式转变的绝佳切口：深蓝 = 人类知识 + 暴力搜索；AlphaGo = 自我博弈 + 强化学习，评估函数由神经网络自动习得。同样是下棋，架构哲学完全不同。深蓝对应 Russell 第2章的「基于目标的智能体」，AlphaGo 则已经是「学习智能体」。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#34d399">
+<div class="ev-title">&#128208; 支持向量机（SVM）
+  <span class="badge" style="background:#064e3b;color:#6ee7b7">1995</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Vapnik等人提出SVM：找到能将两类数据分开的"最大间隔超平面"。通过核函数（Kernel）将数据映射到高维空间，解决非线性分类问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">神经网络在1990年代被认为"黑箱"且难以训练。SVM有严格数学理论（VC维理论），泛化性能有理论保证，在小数据集上表现优异。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">核心思想：最大化分类间隔（margin）。用二次规划求解最优超平面。核函数技巧：在低维空间计算高维内积，避免显式映射的计算开销。常用核：RBF（高斯核）、多项式核。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">SVM在2000年代是机器学习主流方法，广泛用于文本分类、图像识别。2012年后被深度学习超越，但核函数思想影响深远。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">SVM的"最大间隔"思想，类似于你在做分类决策时希望"判断标准离两边都尽量远"——不是刚好能分开，而是留出最大安全边界，提高鲁棒性。这和统计学中的<strong>置信区间</strong>思想相通：我们不只要点估计，还要有足够的置信空间。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#34d399">
+<div class="ev-title">&#127922; 贝叶斯方法与概率图模型
+  <span class="badge" style="background:#064e3b;color:#6ee7b7">1990s</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">将概率论引入AI：用贝叶斯网络表示变量间的条件依赖关系，用贝叶斯推断更新信念。代表：朴素贝叶斯分类器、隐马尔可夫模型（HMM）用于语音识别和NLP。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">现实世界充满不确定性，符号主义的确定性规则无法处理。概率方法天然处理不确定性，且有严格数学基础。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">贝叶斯定理：P(A|B) = P(B|A)*P(A) / P(B)。后验概率 = 似然 x 先验 / 证据。HMM用于序列建模（语音识别、词性标注），是早期NLP的核心工具。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">贝叶斯思想渗透到整个机器学习：正则化=先验、最大似然估计、变分推断。现代大模型的训练目标（最大化似然）本质上是贝叶斯框架的特例。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>贝叶斯定理</strong>直觉版本：你对某件事有初始判断（先验），看到新证据后更新判断（后验）。这和你在商业分析中"基于历史数据建立基准，再用新数据修正预测"是完全相同的逻辑。<br><br><strong>最大似然估计（MLE）</strong>：找到使"观测到这批数据的概率"最大的参数。这是几乎所有机器学习模型训练的底层目标，包括神经网络的交叉熵损失函数。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#34d399">
+<div class="ev-title">&#127794; 集成方法 &middot; 随机森林与Boosting
+  <span class="badge" style="background:#064e3b;color:#6ee7b7">1995&#8211;2001</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">集成学习：组合多个弱分类器形成强分类器。Bagging（随机森林）：并行训练多棵决策树，投票。Boosting（AdaBoost、GBDT）：串行训练，每次关注前一轮的错误样本。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">单个模型容易过拟合（方差大）或欠拟合（偏差大）。集成方法通过"众人拾柴"降低整体误差，在理论和实践上都有优势。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">偏差-方差分解：总误差 = 偏差^2 + 方差 + 噪声。Bagging降低方差，Boosting降低偏差。XGBoost（2014）是GBDT的高效实现，至今仍是结构化数据的首选。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">XGBoost/LightGBM至今仍是Kaggle竞赛和工业界结构化数据的主流方法。美团内部很多推荐、风控模型都基于GBDT。深度学习并未完全取代集成方法。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">你在SQL分析中可能用过决策树的逻辑（IF-THEN分层）。随机森林就是"建很多棵决策树，每棵树用随机抽样的特征和数据，最后投票"。这和你在分析中用多个维度交叉验证结论是同一个思路——单一视角容易偏，多视角综合更稳健。</div></div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-2006">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2006&#8211;2011</span>
+  <span class="era-title">深度学习突破 &middot; Hinton的复兴</span>
+  <span class="era-sub">预训练 &middot; 深层网络 &middot; 表示学习 &middot; Word2Vec</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#fb923c">
+<div class="ev-title">&#128275; 深度信念网络 &middot; "深度学习"命名
+  <span class="badge" style="background:#431407;color:#fdba74">2006</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Hinton提出深度信念网络（DBN）和逐层预训练方法：先用无监督方式逐层训练受限玻尔兹曼机（RBM），再用反向传播微调。正式提出"深度学习"概念。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">深层网络（大于3层）用随机初始化+反向传播训练时，存在<strong>梯度消失</strong>问题：越靠近输入层，梯度越小，权重几乎不更新。预训练提供了更好的初始化。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">梯度消失原因：sigmoid激活函数导数最大值0.25，多层相乘后趋近于0。解决路径：逐层预训练(2006) → ReLU激活函数(2010) → Batch Normalization(2015) → 残差连接(2015)。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">重新点燃神经网络研究热情。证明深层网络可以被有效训练。为2012年AlexNet的爆发奠定基础。"深度学习"成为新的研究范式名称。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>梯度消失</strong>直觉：想象传话游戏中每传一层信息衰减一半，传10层后原始信息几乎消失。深层网络的梯度也是这样——误差信号从输出层传回输入层时，经过多次乘法后变得极小，导致靠近输入的层"学不到东西"。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#fb923c">
+<div class="ev-title">&#128161; Word2Vec &middot; 词向量与表示学习革命
+  <span class="badge" style="background:#431407;color:#fdba74">2013</span>
+  <span class="badge" style="background:#1d4ed8;color:#bfdbfe">NLP</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Mikolov（Google）提出Word2Vec：将每个词映射为稠密向量（如300维），使语义相近的词在向量空间中距离相近。经典例子："国王-男人+女人 ≈ 王后"。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">传统NLP用one-hot编码（词汇表大小的稀疏向量），无法捕捉词语间的语义关系。词向量将语义关系编码进几何距离。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">两种训练方式：CBOW（用上下文预测中心词）和Skip-gram（用中心词预测上下文）。本质是一个浅层神经网络，训练目标是预测上下文，词向量是副产品。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">开创"表示学习"（Representation Learning）范式：让模型自动学习数据的有效表示，而非手工设计特征。这个思想延伸到BERT、GPT的预训练，是现代NLP的基石。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+    <div class="ann-txt">词向量的本质是<strong>降维</strong>：把高维稀疏的one-hot编码压缩成低维稠密向量，同时保留语义信息。这和你在数据分析中用PCA降维是同一个思路——用更少的维度捕捉数据的核心变化。</div></div></div></div></div>
+
+<div class="era-block" id="era-2012">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2012&#8211;2016</span>
+  <span class="era-title">深度学习爆发 &middot; AlexNet革命</span>
+  <span class="era-sub">GPU计算 &middot; 大数据 &middot; CNN/RNN统治</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#f472b6">
+<div class="ev-title">&#127942; AlexNet &middot; 深度学习的ImageNet时刻
+  <span class="badge" style="background:#500724;color:#fbcfe8">2012</span>
+  <span class="badge" style="background:#065f46;color:#6ee7b7">CV</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Krizhevsky、Sutskever、Hinton提出AlexNet，在ImageNet图像分类竞赛中以15.3%错误率碾压第二名（26.2%）。使用GPU训练、ReLU激活、Dropout正则化。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">三个条件同时成熟：大数据（ImageNet 120万张图片）、GPU计算（NVIDIA CUDA）、算法改进（ReLU、Dropout）。深度学习的"寒武纪大爆发"。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">8层深度CNN，使用ReLU（解决梯度消失）、Dropout（随机丢弃神经元，防止过拟合）、数据增强（翻转、裁剪）。在两块GTX 580 GPU上训练5-6天。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">AI领域的分水岭。之后每年ImageNet冠军都是深度学习，传统计算机视觉方法（SIFT、HOG）被彻底淘汰。引发工业界AI投资热潮，Google、Facebook、百度大规模招募AI人才。</div></div>
+</div>
+<div class="ann overthrow"><div class="ann-lbl">&#9889; 被推翻</div>
+  <div class="ann-txt">传统计算机视觉的手工特征工程（SIFT、HOG、Haar）被彻底推翻。"特征需要人工设计"的范式被"让网络自动学习特征"取代。这是AI历史上最重要的范式转变之一。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#f472b6">
+<div class="ev-title">&#127381; ResNet &middot; 残差网络解锁超深网络
+  <span class="badge" style="background:#500724;color:#fbcfe8">2015</span>
+  <span class="badge" style="background:#065f46;color:#6ee7b7">CV</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">He等人（微软）提出ResNet：在每个模块的输出上加上输入（x + F(x)，即残差连接/跳跃连接）。使得训练152层超深网络成为可能，ImageNet错误率降至3.57%，超越人类水平（5.1%）。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">网络越深理论上越强，但实际训练时超过20层后性能反而下降（退化问题）。残差连接让梯度可以"跳过"某些层直接传播，解决了极深网络的训练问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">核心思想：与其让网络学习"完整的变换"，不如让它学习"需要改变什么"（残差）。如果某层不需要做任何变换，它只需学习F(x)≈0，输出就等于输入。这让深层网络更容易训练。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">残差连接成为几乎所有现代深度网络的标配，包括Transformer。ResNet的思想影响了后续所有深度学习架构设计。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">残差连接的直觉：与其从零学习一个复杂函数，不如学习"在原有基础上需要做什么调整"。这和你在商业分析中的<strong>增量分析</strong>思路一致——不是重新建模，而是在基准上分析偏差。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#f472b6">
+<div class="ev-title">&#128260; LSTM &middot; 循环神经网络解决长程依赖
+  <span class="badge" style="background:#500724;color:#fbcfe8">1997&#8594;2014主流</span>
+  <span class="badge" style="background:#1d4ed8;color:#bfdbfe">NLP</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">RNN（循环神经网络）：处理序列数据，每个时间步的输出作为下一步的输入。LSTM（长短期记忆网络，Hochreiter 1997）：引入"门控机制"，解决RNN的长程依赖问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">语言、时间序列等数据有顺序依赖。普通RNN存在梯度消失，无法记住长距离的依赖关系（如句子开头的主语影响句子末尾的动词形式）。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">LSTM的三个门：遗忘门（决定丢弃什么信息）、输入门（决定存储什么新信息）、输出门（决定输出什么）。通过门控机制，梯度可以在长序列中稳定传播。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">2014-2017年NLP的主流架构。机器翻译（seq2seq）、语音识别、文本生成都基于LSTM。2017年Transformer出现后逐渐被取代，但门控思想影响深远。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">LSTM的"门控机制"类似于你在时间序列分析中的<strong>指数加权移动平均（EWMA）</strong>：不是等权重地记住所有历史，而是有选择地"遗忘"旧信息、"记住"重要信息。遗忘门的参数就是EWMA衰减系数的可学习版本。</div></div>
+<div class="ann overthrow"><div class="ann-lbl">&#9889; 被推翻</div>
+  <div class="ann-txt">2017年Transformer出现后，LSTM逐渐被取代。原因：LSTM仍然是顺序计算（无法并行），且长程依赖能力仍有上限。Transformer的自注意力机制让每个词直接关注所有其他词，彻底解决了这两个问题。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#f472b6">
+<div class="ev-title">&#127918; DQN &middot; 深度强化学习与AlphaGo
+  <span class="badge" style="background:#500724;color:#fbcfe8">2013&#8211;2016</span>
+  <span class="badge" style="background:#78350f;color:#fde68a">RL</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">DeepMind提出DQN（深度Q网络）：用深度神经网络近似Q函数（状态-动作价值函数），在49个Atari游戏中达到人类水平。2016年AlphaGo击败李世石，震惊世界。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">传统强化学习（Q-learning）需要手工设计状态特征，无法处理高维输入（如游戏像素）。深度学习自动提取特征，与强化学习结合解锁了新能力。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">强化学习框架：智能体在环境中采取动作，获得奖励，目标是最大化累积奖励。DQN用CNN处理游戏画面，输出每个动作的Q值（预期累积奖励），选择Q值最大的动作。AlphaGo额外使用蒙特卡洛树搜索（MCTS）。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">证明AI可以通过自我博弈超越人类。强化学习成为AI的第三大范式。RLHF（人类反馈强化学习）后来成为ChatGPT训练的核心技术。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">强化学习的核心逻辑和你在商业分析中的<strong>A/B测试迭代优化</strong>非常相似：尝试一个策略（动作）→ 观察结果（奖励）→ 调整策略 → 再尝试。区别在于RL是自动化的、连续的、可以探索更大的策略空间。</div></div>
+</div>
+</div>
+</div>
+
+<div class="era-block" id="era-2017">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2017&#8211;2019</span>
+  <span class="era-title">Transformer革命 &middot; Attention Is All You Need</span>
+  <span class="era-sub">自注意力机制 &middot; BERT &middot; GPT-1/2 &middot; 预训练范式</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#06b6d4">
+<div class="ev-title">&#10024; Transformer &middot; 自注意力机制
+  <span class="badge" style="background:#164e63;color:#a5f3fc">2017</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Vaswani等人（Google）提出Transformer架构：完全基于注意力机制，抛弃了RNN的序列结构。核心创新：自注意力（Self-Attention）让每个词直接关注序列中的任意其他词。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">RNN/LSTM的两个致命缺陷：①序列计算无法并行（必须一步步处理）②长程依赖仍然困难。Transformer同时解决了这两个问题，使得在超大规模数据上训练成为可能。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">自注意力：每个词生成Query（我想找什么）、Key（我是什么）、Value（我的内容）三个向量。注意力分数 = softmax(Q*K^T / sqrt(d)) * V。多头注意力：并行运行多个注意力头，捕捉不同类型的关系。位置编码：用正弦函数编码位置信息（因为Transformer本身无序列感）。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">AI历史上最重要的架构创新之一。Transformer不仅统治NLP，还扩展到CV（ViT）、语音、蛋白质结构预测（AlphaFold2）。GPT、BERT、T5、LLaMA都基于Transformer。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>注意力机制</strong>直觉：你在阅读报告时，不是等权重地关注每个字，而是根据当前理解的上下文，把注意力集中在最相关的部分。自注意力就是让模型自动学习"哪些词对理解当前词最重要"。<br><br><strong>Query-Key-Value</strong>类比数据库：Query是你的查询条件，Key是索引，Value是实际内容。注意力分数决定每条记录的权重，最终输出是加权平均的Value。</div></div>
+<div class="ann overthrow"><div class="ann-lbl">&#9889; 被推翻</div>
+  <div class="ann-txt">RNN/LSTM作为序列建模主流架构被推翻。"序列必须顺序处理"的假设被打破。Transformer的并行计算使得在超大规模数据上训练成为可能，直接催生了大模型时代。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#06b6d4">
+<div class="ev-title">&#129303; BERT &middot; 双向预训练语言模型
+  <span class="badge" style="background:#164e63;color:#a5f3fc">2018</span>
+  <span class="badge" style="background:#1d4ed8;color:#bfdbfe">NLP</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Google提出BERT（Bidirectional Encoder Representations from Transformers）：用Transformer编码器，通过掩码语言模型（MLM）和下一句预测（NSP）在大规模文本上预训练，再微调到下游任务。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">GPT-1（2018）是单向的（只看左边上下文）。BERT用双向注意力，同时看左右上下文，对理解任务（分类、问答）更有效。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">预训练任务：①MLM：随机遮盖15%的词，让模型预测被遮盖的词（类似完形填空）②NSP：判断两个句子是否相邻。预训练后，只需在顶部加一个简单分类层，微调即可适配各种任务。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">确立了"预训练+微调"（Pre-train + Fine-tune）范式，成为NLP的新标准。在11个NLP基准任务上刷新SOTA。开源后被工业界广泛采用（搜索、问答、情感分析）。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>预训练+微调</strong>的思想类比：BERT的预训练就像一个人读了大量书籍积累了通用语言理解能力（通用知识），微调就像针对特定岗位做专项培训（专业知识）。这比从零开始训练每个任务效率高得多——<strong>迁移学习</strong>的核心价值。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#06b6d4">
+<div class="ev-title">&#128221; GPT系列 &middot; 生成式预训练的路线
+  <span class="badge" style="background:#164e63;color:#a5f3fc">2018&#8211;2019</span>
+  <span class="badge" style="background:#1d4ed8;color:#bfdbfe">NLP</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI提出GPT（Generative Pre-trained Transformer）：用Transformer解码器，单向自回归语言模型——给定前文，预测下一个词。GPT-2（2019）参数量达15亿，生成文本质量惊人。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">与BERT的"理解"路线不同，GPT走"生成"路线。自回归语言模型的训练目标极其简单（预测下一个词），但在足够大的数据和模型上，涌现出强大的理解和推理能力。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">自回归：P(x1,x2,...,xn) = 连乘P(xi|x1,...,xi-1)。训练目标：最大化训练文本的对数似然。推理时：给定提示词，逐词采样生成。GPT-2因生成能力太强，OpenAI一度拒绝完全开源。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">GPT路线最终胜出（GPT-3→ChatGPT）。证明了"规模定律"（Scaling Law）：模型越大、数据越多、计算越多，性能持续提升，没有明显天花板。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>自回归语言模型</strong>的训练目标（最大化文本的对数似然）本质上就是<strong>最大似然估计（MLE）</strong>——找到使"观测到这批文本"概率最大的模型参数。这是统计学的核心工具，在这里被用于训练神经网络。<br><br>BERT vs GPT的路线之争：BERT擅长"理解"（分类、问答），GPT擅长"生成"（写作、对话）。最终GPT路线胜出，因为足够大的生成模型也能做理解任务。</div></div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-2020">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2020&#8211;2021</span>
+  <span class="era-title">大模型时代 &middot; 规模定律与涌现</span>
+  <span class="era-sub">GPT-3 &middot; 扩散模型 &middot; CLIP多模态 &middot; 规模定律</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#fbbf24">
+<div class="ev-title">&#127754; GPT-3 &middot; 规模定律与少样本学习
+  <span class="badge" style="background:#451a03;color:#fde68a">2020</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI发布GPT-3：1750亿参数，在45TB文本上训练。展示了惊人的少样本学习（Few-shot Learning）能力：只需在提示词中给几个例子，无需微调即可完成新任务。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">Kaplan等人发现<strong>规模定律（Scaling Law）</strong>：模型性能与参数量、数据量、计算量呈幂律关系，持续扩大规模性能持续提升。这给了OpenAI"堆规模"的理论依据。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">架构与GPT-2相同，只是更大。关键发现：<strong>涌现能力（Emergent Abilities）</strong>——某些能力（如算术、类比推理）在小模型中完全不存在，但在大模型中突然出现，无法从小模型外推预测。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">改变了AI研究范式：从"设计更好的架构"转向"扩大规模"。引发大模型军备竞赛（Google PaLM、Meta LLaMA、百度文心）。In-context Learning成为新的学习范式。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>规模定律</strong>的商业类比：类似于互联网平台的网络效应——用户越多，价值越大，且增长是非线性的。AI的规模定律说的是：算力/数据投入翻倍，性能提升是可预测的幂律增长，这让"投资更多算力"成为可量化的商业决策。<br><br><strong>涌现能力</strong>：这是AI领域最令人惊讶的发现之一——能力不是渐进出现的，而是在某个规模阈值后突然涌现，就像水在100度突然沸腾（相变）。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#fbbf24">
+<div class="ev-title">&#127912; 扩散模型 &middot; 生成AI的新范式
+  <span class="badge" style="background:#451a03;color:#fde68a">2020&#8211;2022</span>
+  <span class="badge" style="background:#4c1d95;color:#ddd6fe">GEN</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">扩散模型（Diffusion Models）：DDPM（2020）→ DALL-E 2、Stable Diffusion（2022）。通过学习"逐步去噪"过程生成图像。Stable Diffusion开源后引爆AI绘画热潮。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">之前的生成模型（GAN）训练不稳定、模式崩溃。VAE生成质量差。扩散模型训练稳定、生成质量高，且可以通过文本条件控制生成内容。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">前向过程：逐步向图像添加高斯噪声，直到变成纯噪声。反向过程：训练神经网络学习逐步去噪，从噪声恢复图像。文本条件：用CLIP将文本编码为向量，引导去噪方向。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">AIGC（AI生成内容）时代的核心技术。Midjourney、Stable Diffusion、Sora（视频）都基于扩散模型。与Transformer结合（DiT架构）成为多模态生成的主流。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">扩散模型的"加噪→去噪"过程，在数学上基于<strong>随机过程</strong>和<strong>贝叶斯推断</strong>。前向加噪是马尔可夫链（每步只依赖上一步），反向去噪是学习条件概率分布P(x_{t-1}|x_t)。如果你学过时间序列的状态空间模型，这个框架会很熟悉。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#fbbf24">
+<div class="ev-title">&#128065; CLIP &middot; 多模态对比学习
+  <span class="badge" style="background:#451a03;color:#fde68a">2021</span>
+  <span class="badge" style="background:#065f46;color:#6ee7b7">CV</span>
+  <span class="badge" style="background:#1d4ed8;color:#bfdbfe">NLP</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI提出CLIP：用4亿对图文数据，通过对比学习训练图像编码器和文本编码器，使配对的图文在向量空间中距离近，不配对的距离远。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">打通视觉和语言的语义空间。之前图像模型和文本模型是分离的，CLIP建立了统一的多模态表示空间。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">对比学习（Contrastive Learning）：在一个batch中，N对图文，N^2个组合，只有N个是正样本（配对），其余是负样本。最大化正样本相似度，最小化负样本相似度。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">成为多模态AI的基础组件。DALL-E、Stable Diffusion都用CLIP做文本条件。GPT-4V、Gemini等多模态大模型的视觉理解能力都建立在类似架构上。</div></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-2022">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2022&#8211;2023</span>
+  <span class="era-title">RLHF与对齐 &middot; ChatGPT改变世界</span>
+  <span class="era-sub">指令微调 &middot; 人类反馈 &middot; 开源生态 &middot; GPT-4</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#ef4444">
+<div class="ev-title">&#128172; InstructGPT / ChatGPT &middot; RLHF对齐
+  <span class="badge" style="background:#450a0a;color:#fca5a5">2022</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI提出RLHF（Reinforcement Learning from Human Feedback）：在GPT-3基础上，通过人类标注者的偏好反馈训练奖励模型，再用PPO强化学习算法优化语言模型，使其输出更符合人类期望。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">GPT-3虽然能力强，但输出不可控：可能有害、不诚实、无用。纯语言模型的目标（预测下一个词）与"对人类有帮助"之间存在根本性偏差（Alignment Problem，对齐问题）。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">三步流程：①监督微调（SFT）：用人工标注的高质量对话微调GPT-3 ②奖励模型（RM）：训练一个模型预测人类对两个回答的偏好 ③PPO优化：用RM作为奖励信号，用强化学习进一步优化语言模型。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">ChatGPT（2022.11）发布5天用户破百万，2个月破亿。证明了RLHF是让大模型"可用"的关键技术。引发全球AI竞赛：Google Bard、百度文心、阿里通义、讯飞星火。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>RLHF的本质</strong>：用人类偏好数据训练一个"评分函数"（奖励模型），再用这个评分函数指导语言模型的优化。这和你在商业分析中用<strong>用户满意度评分</strong>来优化产品策略是同一个逻辑——只是这里的"用户"是人类标注者，"产品"是语言模型的输出。<br><br><strong>对齐问题（Alignment）</strong>：AI系统的优化目标（最大化奖励）与人类真实意图之间的偏差。这是AI安全领域的核心问题。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#ef4444">
+<div class="ev-title">&#129422; LLaMA &middot; 开源大模型生态爆发
+  <span class="badge" style="background:#450a0a;color:#fca5a5">2023</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Meta发布LLaMA（7B-65B参数）：在更多数据上训练更小的模型，性能超过同等规模的GPT-3。LLaMA 2开源后，Alpaca、Vicuna、Mistral等大量开源模型涌现。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">Chinchilla定律（2022）：之前的大模型训练数据不足，最优策略是"更多数据+更小模型"而非"更大模型+更少数据"。LLaMA验证了这一点。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">技术改进：RoPE位置编码（更好的长文本处理）、SwiGLU激活函数、RMSNorm（更稳定的训练）。这些改进成为后续开源模型的标配。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">打破了大模型的封闭生态。开源社区爆发：Hugging Face成为AI界的GitHub。中国开源模型（Qwen、DeepSeek、Yi）也在此基础上快速追赶。</div></div>
+</div>
+</div>
+
+<div class="ev-card" style="border-left-color:#ef4444">
+<div class="ev-title">&#128302; GPT-4 &middot; 多模态与能力跃升
+  <span class="badge" style="background:#450a0a;color:#fca5a5">2023</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI发布GPT-4：支持图像输入（多模态），在律师资格考试、医学执照考试等专业测试中达到人类顶尖水平。参数量未公开，据估计使用了MoE（混合专家）架构。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">GPT-3.5（ChatGPT）已展示RLHF的威力，GPT-4在此基础上扩大规模、增加多模态能力、改进对齐技术。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">据推测使用了MoE（混合专家）架构：多个专家网络，每次只激活部分专家，在保持参数量的同时降低计算成本。具体架构OpenAI未公开。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">确立了多模态大模型的方向。引发"AGI是否已经到来"的讨论。Google（Gemini）、Anthropic（Claude）加速追赶。AI应用层爆发：Copilot、Cursor等AI编程工具。</div></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="era-block" id="era-2024">
+<div class="era-hd" onclick="toggleEra(this)">
+  <span class="era-year">2024&#8211;2025</span>
+  <span class="era-title">推理模型与Agent &middot; 新范式前沿</span>
+  <span class="era-sub">o1/o3 &middot; Chain-of-Thought &middot; MoE &middot; DeepSeek &middot; AI Agent</span>
+  <span class="era-arrow">&#9658;</span>
+</div>
+<div class="era-body">
+
+<div class="ev-card" style="border-left-color:#10b981">
+<div class="ev-title">&#129518; Chain-of-Thought &middot; 思维链推理
+  <span class="badge" style="background:#022c22;color:#6ee7b7">2022&#8594;2024</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">Wei等人（Google）发现：在提示词中加入"让我们一步步思考"（Let's think step by step），大模型的推理准确率大幅提升。催生了一系列推理增强技术：CoT、ToT（思维树）、Self-Consistency。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">大模型的"直接回答"相当于直觉判断，容易出错。CoT让模型"显式推理"，将复杂问题分解为步骤，每步都可以被验证，减少错误积累。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">Few-shot CoT：在提示词中给出带推理步骤的例子。Zero-shot CoT：直接加"Let's think step by step"。Self-Consistency：生成多条推理链，投票选最一致的答案。ToT：树状搜索多条推理路径。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">CoT是o1/o3推理模型的前身。证明了"推理时计算"（Test-time Compute）的价值：不只是训练时投入更多，推理时也可以通过更多计算提升质量。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt">CoT的思想和你在做复杂分析时"先拆解问题框架，再逐步填充数据"是完全一致的——不是直接给结论，而是显式地展示推理过程。这也是为什么你在使用AI工具时，让它"一步步分析"往往比直接问答效果更好。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#10b981">
+<div class="ev-title">&#129300; OpenAI o1/o3 &middot; 慢思考推理模型
+  <span class="badge" style="background:#022c22;color:#6ee7b7">2024</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">OpenAI发布o1（2024.9）：在回答前进行大量内部"思考"（隐藏的CoT推理链），在数学竞赛、编程、科学推理上大幅超越GPT-4。o3（2024.12）进一步提升，在ARC-AGI测试中接近人类水平。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">Kahneman的"系统1/系统2"框架：GPT-4是快速直觉（系统1），o1是慢速推理（系统2）。通过在推理时投入更多计算，解决需要多步推理的复杂问题。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">核心技术：用强化学习训练模型学会"何时需要更多思考"以及"如何有效推理"。推理时生成长达数千token的内部思维链，再给出最终答案。具体训练细节OpenAI未公开。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">开创"推理时计算扩展"（Test-time Scaling）新范式：不只是训练更大的模型，而是在推理时投入更多计算。DeepSeek-R1（2025）开源复现，引发全球震动。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>系统1/系统2</strong>来自诺贝尔经济学奖得主卡尼曼的《思考，快与慢》——你可能读过这本书。系统1是快速、直觉、自动的；系统2是慢速、理性、需要努力的。o1的设计哲学就是让AI从"纯系统1"进化到"可以调用系统2"。</div></div>
+<div class="ann extend"><div class="ann-lbl">&#127807; 技术路线传承</div>
+  <div class="ann-txt">CoT（2022）→ Self-Consistency → ToT → Process Reward Model（过程奖励模型）→ o1。这条技术路线的核心洞察：推理质量不只取决于模型大小，还取决于推理时的计算量。</div></div>
+</div>
+
+<div class="ev-card" style="border-left-color:#10b981">
+<div class="ev-title">&#128024; DeepSeek &middot; 中国开源模型的突破
+  <span class="badge" style="background:#022c22;color:#6ee7b7">2024&#8211;2025</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">DeepSeek（深度求索）发布系列模型：DeepSeek-V2（MoE架构，极低推理成本）、DeepSeek-V3（671B MoE，性能媲美GPT-4o）、DeepSeek-R1（开源推理模型，性能媲美o1）。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">在算力受限（无法获得最新NVIDIA GPU）的情况下，通过算法创新（MoE、MLA注意力、FP8训练）大幅降低训练和推理成本，证明"效率"可以弥补"规模"的差距。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">关键技术：①MoE（混合专家）：671B总参数，每次只激活37B，推理成本大幅降低 ②MLA（多头潜在注意力）：压缩KV缓存，降低内存占用 ③纯RL训练推理能力（R1）：无需监督数据，直接用强化学习训练推理。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">2025年1月引发全球AI市场震动（英伟达单日市值蒸发6000亿美元）。证明开源模型可以媲美闭源顶级模型。重新定义了AI的成本曲线，加速AI应用普及。</div></div>
+</div>
+</div>
+
+<div class="ev-card" style="border-left-color:#10b981">
+<div class="ev-title">&#129302; AI Agent &middot; 从对话到自主行动
+  <span class="badge" style="background:#022c22;color:#6ee7b7">2023&#8211;2025</span>
+  <span class="badge" style="background:#7f1d1d;color:#fca5a5">AGT</span>
+</div>
+<div class="qa-grid">
+  <div class="qa-item"><div class="qa-lbl what">WHAT</div>
+    <div class="qa-txt">AI Agent：以大模型为"大脑"，配备工具调用（Tool Use）、记忆（Memory）、规划（Planning）能力，能够自主完成多步骤任务。代表：AutoGPT、LangChain、Claude Computer Use、OpenAI Operator。</div></div>
+  <div class="qa-item"><div class="qa-lbl why">WHY</div>
+    <div class="qa-txt">单次对话的大模型只能"回答问题"，无法"完成任务"。Agent架构让AI可以：调用外部工具（搜索、代码执行、API）、记住历史状态、分解复杂任务、自我纠错。</div></div>
+  <div class="qa-item"><div class="qa-lbl how">HOW</div>
+    <div class="qa-txt">ReAct框架：Reasoning（推理）+ Acting（行动）交替进行。工具调用：模型输出结构化的工具调用请求，执行结果反馈给模型。RAG（检索增强生成）：实时检索外部知识库，解决知识截止问题。MCP协议（2024）：标准化Agent与工具的接口。</div></div>
+  <div class="qa-item"><div class="qa-lbl sowhat">SO WHAT</div>
+    <div class="qa-txt">2025年被认为是"AI Agent元年"。从"AI助手"到"AI员工"的转变。对商业分析师的影响：AI可以自主完成数据查询、分析、报告生成的全流程，分析师的价值将更多体现在问题定义和判断层面。</div></div>
+</div>
+<div class="ann bridge"><div class="ann-lbl">&#128279; 桥接注释</div>
+  <div class="ann-txt"><strong>RAG（检索增强生成）</strong>：大模型的知识是训练时固化的，无法实时更新。RAG的解决方案是：先用向量检索找到相关文档，再把文档内容塞进提示词，让模型基于最新信息回答。这和你在分析中"先查数据库，再写报告"是完全相同的工作流程——只是现在AI可以自动完成这个循环。<br><br><strong>Agent的学派传承</strong>：Agent概念源自1990年代强化学习和符号AI的"智能体"定义（感知-行动循环）。现代LLM Agent是用神经网络实现了符号AI时代的智能体架构愿景。</div></div>
+</div>
+</div><!-- /era-body -->
+</div><!-- /era-block era-2024 -->
+<!-- /panel-timeline -->
+      </div><!-- /timeline-content -->
+    </div><!-- /panel-timeline -->
+
+<!-- GLOSSARY PANEL -->
+    <div class="panel" id="panel-glossary">
+      <div class="sec-h">核心概念 Glossary</div>
+      <div class="sec-sub">AI技术原理精确概念定义，附桥接注释。<strong>悬停卡片</strong>可编辑/删除，<strong>@era-xxx</strong> 或 <strong>@概念名</strong> 自动生成跳转链接。</div>
+      <div class="glossary-topbar">
+        <div class="filter-bar" id="gloss-filters">
+          <button class="f-btn active" onclick="filterGloss('all',this)">全部</button>
+          <button class="f-btn" onclick="filterGloss('数学基础',this)">数学基础</button>
+          <button class="f-btn" onclick="filterGloss('神经网络',this)">神经网络</button>
+          <button class="f-btn" onclick="filterGloss('训练方法',this)">训练方法</button>
+          <button class="f-btn" onclick="filterGloss('架构',this)">架构</button>
+          <button class="f-btn" onclick="filterGloss('大模型',this)">大模型</button>
+          <button class="f-btn" onclick="filterGloss('生成模型',this)">生成模型</button>
+          <button class="f-btn" onclick="filterGloss('Agent',this)">Agent</button>
+        </div>
+        <button class="gls-add-btn" onclick="openAddGlossary()">＋ 新增概念</button>
+        <button class="gls-io-btn" onclick="exportGlossary()">导出</button>
+        <button class="gls-io-btn" onclick="document.getElementById('gls-import-file').click()">导入</button>
+        <input type="file" id="gls-import-file" accept=".json" style="display:none" onchange="importGlossary(this)">
+      </div>
+      <div class="gloss-grid" id="gloss-grid"><div class="g-card" data-cat="数学基础">
+  <div class="g-term">梯度下降</div>
+  <div class="g-en">Gradient Descent</div>
+  <div class="g-desc">神经网络训练的核心算法。目标：找到使损失函数最小的参数。方法：沿损失函数梯度的反方向更新参数，每次走一小步（学习率）。</div>
+  <div class="g-note">直觉类比：在山地中蒙眼下山——每次感受脚下坡度，朝最陡的下坡方向走一步。SGD是每次只看一个样本，Adam是带"动量"的自适应版本。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">反向传播</div>
+  <div class="g-en">Backpropagation</div>
+  <div class="g-desc">计算神经网络中每个参数对损失函数梯度的算法。基于链式法则（微积分），从输出层向输入层逐层传播误差信号。</div>
+  <div class="g-note">1986年Rumelhart等人推广，解决了多层网络无法训练的问题，是深度学习的数学基础。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="架构">
+  <div class="g-term">注意力机制</div>
+  <div class="g-en">Attention Mechanism</div>
+  <div class="g-desc">让模型在处理序列时，动态地关注不同位置的信息。Self-Attention：序列内部各位置互相关注。Multi-Head Attention：多组注意力并行，捕捉不同类型的依赖关系。</div>
+  <div class="g-note">核心公式：Attention(Q,K,V) = softmax(QK<sup>T</sup>/√d<sub>k</sub>)V。Q/K/V分别是查询、键、值矩阵，由输入线性变换得到。</div>
+  <div class="g-tag">架构</div>
+</div>
+
+<div class="g-card" data-cat="神经网络">
+  <div class="g-term">嵌入向量</div>
+  <div class="g-en">Embedding</div>
+  <div class="g-desc">将离散符号（词、图像块、用户ID）映射到连续向量空间的技术。语义相近的符号在向量空间中距离近。</div>
+  <div class="g-note">神经网络只能处理数字，Embedding是将现实世界的离散对象转化为可计算表示的桥梁。Word2Vec（2013）是经典词嵌入，现代大模型的Token Embedding是其延伸。</div>
+  <div class="g-tag">神经网络</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">过拟合与正则化</div>
+  <div class="g-en">Overfitting &amp; Regularization</div>
+  <div class="g-desc">过拟合：模型在训练集上表现好，但在新数据上表现差——记住了噪声而非规律。正则化：防止过拟合的技术，包括L1/L2正则、Dropout、Early Stopping、数据增强。</div>
+  <div class="g-note">偏差-方差权衡（Bias-Variance Tradeoff）：模型太简单→高偏差（欠拟合）；模型太复杂→高方差（过拟合）。正则化是在两者间找平衡。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">迁移学习</div>
+  <div class="g-en">Transfer Learning</div>
+  <div class="g-desc">将在大数据集上预训练的模型，迁移到小数据集的新任务上。预训练模型已学到通用特征，只需微调（Fine-tuning）即可适应新任务。</div>
+  <div class="g-note">大模型时代的迁移学习是"预训练+提示词工程"或"预训练+RLHF微调"，不再需要大量标注数据。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="大模型">
+  <div class="g-term">规模定律</div>
+  <div class="g-en">Scaling Law</div>
+  <div class="g-desc">Kaplan等人（2020）发现：语言模型性能与参数量N、数据量D、计算量C呈幂律关系。Chinchilla（2022）修正：最优训练需要N和D同步扩大。</div>
+  <div class="g-note">商业含义：规模定律使AI投资可预测——给定算力预算，可以计算出预期性能提升，这是大模型军备竞赛的理论基础。</div>
+  <div class="g-tag">大模型</div>
+</div>
+
+<div class="g-card" data-cat="大模型">
+  <div class="g-term">涌现能力</div>
+  <div class="g-en">Emergent Abilities</div>
+  <div class="g-desc">在小模型中完全不存在、但在大模型中突然出现的能力（如算术、类比推理、多步推理）。无法从小模型的性能曲线外推预测。</div>
+  <div class="g-note">争议：部分研究者认为涌现是评估指标的假象。但无论如何，大模型展现出的能力边界仍在持续扩展。</div>
+  <div class="g-tag">大模型</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">强化学习</div>
+  <div class="g-en">Reinforcement Learning</div>
+  <div class="g-desc">智能体通过与环境交互、获得奖励信号来学习策略的框架。核心要素：状态(S)、动作(A)、奖励(R)、策略(π)、价值函数(V)。</div>
+  <div class="g-note">与监督学习的区别：监督学习有标准答案，RL只有延迟的奖励信号。RLHF将人类偏好转化为奖励信号，是连接RL与大模型的桥梁。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="Agent">
+  <div class="g-term">向量数据库</div>
+  <div class="g-en">Vector Database</div>
+  <div class="g-desc">专门存储和检索高维向量（Embedding）的数据库。支持近似最近邻搜索（ANN），在海量向量中快速找到语义最相近的结果。代表：Pinecone、Weaviate、Chroma、Milvus。</div>
+  <div class="g-note">RAG（检索增强生成）的核心组件——将文档转化为向量存储，查询时检索最相关的文档片段，注入大模型上下文。</div>
+  <div class="g-tag">Agent</div>
+</div>
+
+<div class="g-card" data-cat="架构">
+  <div class="g-term">混合专家</div>
+  <div class="g-en">Mixture of Experts (MoE)</div>
+  <div class="g-desc">将模型分为多个"专家"子网络，每次输入只激活部分专家（由门控网络决定）。总参数量大，但推理时计算量小。GPT-4、DeepSeek-V3、Mixtral都使用MoE。</div>
+  <div class="g-note">类比：公司里有很多专家，但每个项目只调用相关专家，而非让所有人都参与每个决策。</div>
+  <div class="g-tag">架构</div>
+</div>
+
+<div class="g-card" data-cat="大模型">
+  <div class="g-term">提示词工程</div>
+  <div class="g-en">Prompt Engineering</div>
+  <div class="g-desc">通过设计输入提示词来引导大模型输出期望结果的技术。包括：Zero-shot、Few-shot、CoT（思维链）、角色扮演、结构化输出等技巧。</div>
+  <div class="g-note">本质：大模型是"条件概率机器"，提示词定义了条件，决定了模型从哪个"语义空间"采样。好的提示词是在模型的知识空间中精准导航。</div>
+  <div class="g-tag">大模型</div>
+</div>
+
+<div class="g-card" data-cat="生成模型">
+  <div class="g-term">扩散模型</div>
+  <div class="g-en">Diffusion Model</div>
+  <div class="g-desc">通过学习"逐步去噪"过程生成图像的生成模型。前向过程：逐步加噪至纯噪声；反向过程：训练神经网络学习逐步去噪。</div>
+  <div class="g-note">数学基础：随机过程+贝叶斯推断。前向加噪是马尔可夫链，反向去噪是学习条件概率分布P(x_{t-1}|x_t)。Stable Diffusion、DALL-E 2、Sora均基于此。</div>
+  <div class="g-tag">生成模型</div>
+</div>
+
+<div class="g-card" data-cat="Agent">
+  <div class="g-term">AI Agent</div>
+  <div class="g-en">AI Agent</div>
+  <div class="g-desc">以大模型为"大脑"，配备工具调用（Tool Use）、记忆（Memory）、规划（Planning）能力，能够自主完成多步骤任务的系统。</div>
+  <div class="g-note">ReAct框架：Reasoning（推理）+ Acting（行动）交替进行。RAG是Agent的知识检索组件。MCP协议（2024）标准化了Agent与工具的接口。</div>
+  <div class="g-tag">Agent</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">期望效用</div>
+  <div class="g-en">Expected Utility</div>
+  <div class="g-desc">在不确定性下做决策的理论框架。核心思想：不直接比较结果，而是比较每种选择的"期望效用值"——即所有可能结果的效用乘以其概率之和。选择期望效用最大的行动。</div>
+  <div class="g-note">这是 Russell 全书「理性行动」哲学的数学基础。效用函数（Utility Function）把结果映射为数值，解决了多目标权衡问题。现实挑战：效用函数很难定义（抖音优化点击率就是定义错了效用函数的典型案例）。在分析地图 L1「理性地行动」和 L3「随机性环境」中均作为核心工具出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="其他">
+  <div class="g-term">卡尔曼滤波</div>
+  <div class="g-en">Kalman Filter</div>
+  <div class="g-desc">一种在含噪声的观测序列中估计系统真实状态的算法。通过融合"预测"（基于模型推算下一状态）和"更新"（用新观测修正预测），持续维护对隐藏状态的最优估计。</div>
+  <div class="g-note">这是「基于模型的反射智能体程序」的经典实现：智能体无法直接观测真实状态（部分可观测），但维护一个内部状态估计，并用转移模型不断更新它。应用：GPS导航、飞行器姿态控制、自动驾驶传感器融合。局限：假设噪声是高斯分布、系统是线性的；非线性场景用扩展卡尔曼滤波（EKF）或粒子滤波。</div>
+  <div class="g-tag">其他</div>
+</div>
+
+<div class="g-card" data-cat="其他">
+  <div class="g-term">SLAM</div>
+  <div class="g-en">Simultaneous Localization and Mapping</div>
+  <div class="g-desc">同步定位与建图。机器人在未知环境中移动时，同时完成两件事：估计自身位置（定位）和构建环境地图（建图）。两者相互依赖——需要地图才能定位，需要定位才能建图。</div>
+  <div class="g-note">这是「基于模型的反射智能体程序」的典型技术路线：机器人只能感知局部（部分可观测），必须维护内部状态（位置估计 + 地图）才能行动。核心挑战是"闭环检测"——识别出曾经到过的地方，修正累积误差。现代自动驾驶、扫地机器人、AR/VR空间定位均依赖SLAM。</div>
+  <div class="g-tag">其他</div>
+</div>
+
+<div class="g-card" data-cat="其他">
+  <div class="g-term">推荐系统</div>
+  <div class="g-en">Recommendation System</div>
+  <div class="g-desc">根据用户历史行为和偏好，预测并推送用户可能感兴趣内容的系统。核心方法：协同过滤（找相似用户/物品）、内容过滤（匹配内容特征）、深度学习排序模型。</div>
+  <div class="g-note">推荐系统是「基于效用的智能体程序」的典型应用：需要在多目标间权衡（点击率 vs 时长 vs 多样性 vs 用户满意度），用效用函数综合评分。关键问题：效用函数定义错误会导致系统性偏差——只优化点击率会产生信息茧房，这正是 Russell 在 PEAS 框架中强调「性能度量最难定义」的现实案例。美团、抖音、淘宝的核心算法均属此类。</div>
+  <div class="g-tag">其他</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">搜索算法</div>
+  <div class="g-en">Search Algorithm</div>
+  <div class="g-desc">在状态空间中系统性地寻找从初始状态到目标状态路径的算法族。分为无信息搜索（BFS、DFS、一致代价搜索）和启发式搜索（A*、贪婪最佳优先）。</div>
+  <div class="g-note">适用条件：完全可观测 + 确定性环境。棋盘游戏（国际象棋、围棋）是经典应用场景。A* 算法用启发函数估计剩余代价，在保证最优解的前提下大幅减少搜索空间。在分析地图 L3「可观测性（完全可观测）」中作为核心算法出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">博弈树</div>
+  <div class="g-en">Game Tree / Minimax</div>
+  <div class="g-desc">将双人对抗博弈展开为树形结构，每层交替代表两个玩家的决策。Minimax 算法：假设对手总是做出对自己最优的选择，递归计算每个节点的最优值。Alpha-Beta 剪枝大幅减少需要搜索的节点数。</div>
+  <div class="g-note">深蓝（1997）击败卡斯帕罗夫依赖的核心技术：每秒评估 2 亿个棋局位置，配合 Alpha-Beta 剪枝和开局库。AlphaGo 之前，博弈树是棋类 AI 的主流范式；AlphaGo 用蒙特卡洛树搜索（MCTS）+ 深度学习替代了纯博弈树。在分析地图 L3「可观测性（完全可观测）」中作为核心算法出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">贝叶斯网络</div>
+  <div class="g-en">Bayesian Network</div>
+  <div class="g-desc">用有向无环图（DAG）表示变量间条件依赖关系的概率图模型。节点是随机变量，边表示因果/依赖关系，每个节点存储条件概率表（CPT）。支持在部分观测下推断未观测变量的概率分布。</div>
+  <div class="g-note">概率推理的核心工具。适用于部分可观测环境：当传感器只能看到部分状态时，用贝叶斯网络推断隐藏状态的概率分布。医疗诊断（症状→疾病）、垃圾邮件过滤（词频→垃圾邮件概率）是经典应用。在分析地图 L3「可观测性（部分可观测）」中作为概率推理方法出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">蒙特卡洛方法</div>
+  <div class="g-en">Monte Carlo Method</div>
+  <div class="g-desc">通过大量随机采样来估计数值结果的计算方法。核心思想：用随机实验的统计结果近似理论上难以精确计算的期望值或概率。蒙特卡洛树搜索（MCTS）将其用于博弈决策。</div>
+  <div class="g-note">AlphaGo 的关键突破之一：用 MCTS 替代穷举博弈树，通过随机模拟棋局结果来评估局面价值，解决了围棋状态空间过大（10^170）无法穷举的问题。在分析地图 L3「确定性（随机性环境）」中作为处理不确定性的核心算法出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">动态规划</div>
+  <div class="g-en">Dynamic Programming</div>
+  <div class="g-desc">将复杂问题分解为重叠子问题，通过存储子问题的解避免重复计算的算法设计范式。在强化学习中，值迭代（Value Iteration）和策略迭代（Policy Iteration）是动态规划的核心应用。</div>
+  <div class="g-note">适用条件：已知环境（有模型）。当智能体知道环境的转移概率时，可以用动态规划精确计算最优策略，无需与环境交互。与强化学习的区别：RL 用于未知环境，动态规划用于已知环境。在分析地图 L3「已知性（已知环境）」中作为核心算法出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="数学基础">
+  <div class="g-term">博弈论</div>
+  <div class="g-en">Game Theory</div>
+  <div class="g-desc">研究多个理性决策者在策略互动中如何做出最优决策的数学理论。核心概念：纳什均衡（没有玩家能通过单方面改变策略获益的状态）、零和博弈、合作博弈。</div>
+  <div class="g-note">在 AI 中的应用：多智能体系统的理论基础。GAN（生成对抗网络）是博弈论在深度学习中的直接应用——生成器和判别器构成零和博弈。在分析地图 L3「智能体数量（多智能体）」中作为核心理论框架出现。</div>
+  <div class="g-tag">数学基础</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">深度学习</div>
+  <div class="g-en">Deep Learning</div>
+  <div class="g-desc">使用多层神经网络（深层架构）自动从数据中学习特征表示的机器学习范式。核心突破：用反向传播训练深层网络，自动提取层次化特征，无需人工特征工程。</div>
+  <div class="g-note">2012 年 AlexNet 在 ImageNet 竞赛中以大幅优势获胜，标志深度学习时代开启。核心优势：连续状态空间中的函数逼近——用神经网络近似任意复杂的映射关系，解决了传统算法无法处理高维连续输入的问题。在分析地图 L3「连续性（连续环境）」中作为核心学习范式出现。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">对抗训练</div>
+  <div class="g-en">Adversarial Training</div>
+  <div class="g-desc">通过让模型与对抗样本或对抗智能体博弈来提升鲁棒性和能力的训练方法。GAN 中生成器与判别器互相对抗；RLHF 中奖励模型与策略模型形成对抗关系。</div>
+  <div class="g-note">在多智能体环境中，对抗训练是让智能体学会应对策略性对手的核心方法。AlphaGo Zero 的自我对弈（Self-Play）是对抗训练的极致形式——智能体与自身的历史版本对抗，持续提升。在分析地图 L3「智能体数量（多智能体）」中作为核心方法出现。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">在线学习</div>
+  <div class="g-en">Online Learning</div>
+  <div class="g-desc">模型在接收新数据时实时更新参数，而非等待收集完整数据集后批量训练的学习方式。每条新数据到来时立即更新模型，适应动态变化的环境。</div>
+  <div class="g-note">与批量学习（Batch Learning）的区别：批量学习用固定数据集训练，部署后不更新；在线学习持续学习，能适应数据分布的变化（概念漂移）。适用于动态环境：股票价格预测、实时推荐系统、自动驾驶中的持续适应。在分析地图 L3「动态性（动态环境）」中作为核心方法出现。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">函数逼近</div>
+  <div class="g-en">Function Approximation</div>
+  <div class="g-desc">用参数化函数（如神经网络）近似表示复杂映射关系的技术。在强化学习中，用神经网络近似价值函数 V(s) 或 Q(s,a)，解决状态空间过大无法用表格存储的问题。</div>
+  <div class="g-note">DQN（Deep Q-Network，2013）是函数逼近在强化学习中的里程碑：用深度神经网络近似 Q 函数，让 RL 首次能处理高维连续输入（如游戏画面像素）。这是深度学习与强化学习结合的起点。在分析地图 L3「连续性（连续环境）」中作为核心算法出现。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+<div class="g-card" data-cat="训练方法">
+  <div class="g-term">RLHF</div>
+  <div class="g-en">Reinforcement Learning from Human Feedback</div>
+  <div class="g-desc">用人类偏好反馈训练奖励模型，再用强化学习优化语言模型的训练方法。三步流程：① 监督微调（SFT）；② 训练奖励模型（人类对输出排序）；③ 用 PPO 算法优化策略使奖励最大化。</div>
+  <div class="g-note">InstructGPT（2022）首次大规模应用，使 GPT-3 从「预测下一个词」转变为「遵循指令」。核心价值：将人类难以形式化的偏好（有帮助、无害、诚实）转化为可优化的奖励信号。ChatGPT 的核心训练方法。在分析地图 L4「程序04 基于效用」中作为典型训练方法出现。</div>
+  <div class="g-tag">训练方法</div>
+</div>
+
+</div>
+    </div>
+
+    <!-- DIRECTIONS PANEL -->
+    <div class="panel" id="panel-directions">
+      <div class="sec-h">核心研究方向</div>
+      <div class="sec-sub">AI六大研究方向的发展脉络、关键里程碑与技术突破。</div>
+      <div class="dir-grid" id="dir-grid"><div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">
+    <div class="dir-icon">👁️</div>
+    <div><div class="dir-name">计算机视觉</div><div class="dir-en">Computer Vision</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">1960s</span><span>边缘检测、形状识别（符号方法）</span></div>
+    <div class="dir-phase"><span class="dir-yr">2000s</span><span>SIFT/HOG特征 + SVM分类器</span></div>
+    <div class="dir-phase"><span class="dir-yr">2012</span><span>AlexNet：深度CNN革命，ImageNet错误率减半</span></div>
+    <div class="dir-phase"><span class="dir-yr">2015</span><span>ResNet：残差连接，152层网络，超越人类</span></div>
+    <div class="dir-phase"><span class="dir-yr">2020+</span><span>ViT：Transformer用于视觉；CLIP多模态；扩散模型生成</span></div>
+    <div class="dir-key">🔑 核心突破：卷积操作的平移不变性 → 残差连接解决梯度消失 → 注意力机制捕捉全局依赖</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('AlexNet')">📅 AlexNet 2012</span>
+      <span class="br-tag timeline" onclick="jumpEvent('ResNet')">📅 ResNet 2015</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('深度学习')">📖 深度学习</span>
+      <span class="br-tag analysismap" onclick="showCtx('cv')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#1a3a2a,#065f46)">
+    <div class="dir-icon">💬</div>
+    <div><div class="dir-name">自然语言处理</div><div class="dir-en">Natural Language Processing</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">1950s</span><span>规则系统、有限状态机、乔姆斯基形式语法</span></div>
+    <div class="dir-phase"><span class="dir-yr">1990s</span><span>统计语言模型、HMM、最大熵模型</span></div>
+    <div class="dir-phase"><span class="dir-yr">2013</span><span>Word2Vec：词嵌入，语义向量空间</span></div>
+    <div class="dir-phase"><span class="dir-yr">2017</span><span>Transformer：自注意力，并行训练</span></div>
+    <div class="dir-phase"><span class="dir-yr">2018+</span><span>BERT/GPT预训练范式 → GPT-3少样本 → ChatGPT对齐</span></div>
+    <div class="dir-key">🔑 核心突破：统计→神经→预训练→对齐。每次范式转变都大幅降低了对标注数据的依赖。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('Transformer')">📅 Transformer 2017</span>
+      <span class="br-tag timeline" onclick="jumpEvent('ChatGPT')">📅 ChatGPT 2022</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('Transformer')">📖 Transformer</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('RLHF')">📖 RLHF</span>
+      <span class="br-tag persons" onclick="jumpPerson('hinton')">👤 Hinton</span>
+      <span class="br-tag analysismap" onclick="showCtx('nlp')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#3b1a5f,#6d28d9)">
+    <div class="dir-icon">🎮</div>
+    <div><div class="dir-name">强化学习</div><div class="dir-en">Reinforcement Learning</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">1950s</span><span>Bellman方程、动态规划（理论基础）</span></div>
+    <div class="dir-phase"><span class="dir-yr">1992</span><span>TD-Gammon：RL下西洋双陆棋达到人类水平</span></div>
+    <div class="dir-phase"><span class="dir-yr">2013</span><span>DQN：深度Q网络，Atari游戏超越人类</span></div>
+    <div class="dir-phase"><span class="dir-yr">2016</span><span>AlphaGo：MCTS+深度RL，围棋击败世界冠军</span></div>
+    <div class="dir-phase"><span class="dir-yr">2022+</span><span>RLHF：人类反馈强化学习，对齐大语言模型</span></div>
+    <div class="dir-key">🔑 核心突破：深度神经网络解决了RL的状态空间爆炸问题；RLHF将RL从游戏扩展到语言对齐。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('AlphaGo')">📅 AlphaGo 2016</span>
+      <span class="br-tag timeline" onclick="jumpEvent('DQN')">📅 DQN 2013</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('强化学习')">📖 强化学习</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('RLHF')">📖 RLHF</span>
+      <span class="br-tag persons" onclick="jumpPerson('sutton')">👤 Sutton</span>
+      <span class="br-tag analysismap" onclick="showCtx('rl')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#3a1a1a,#991b1b)">
+    <div class="dir-icon">🎨</div>
+    <div><div class="dir-name">生成模型</div><div class="dir-en">Generative Models</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">2013</span><span>VAE：变分自编码器，连续潜在空间</span></div>
+    <div class="dir-phase"><span class="dir-yr">2014</span><span>GAN：对抗训练，生成逼真图像</span></div>
+    <div class="dir-phase"><span class="dir-yr">2020</span><span>扩散模型：逐步去噪，训练稳定，质量高</span></div>
+    <div class="dir-phase"><span class="dir-yr">2021</span><span>DALL-E/CLIP：文本条件图像生成</span></div>
+    <div class="dir-phase"><span class="dir-yr">2022+</span><span>Stable Diffusion开源；Sora视频生成；多模态统一</span></div>
+    <div class="dir-key">🔑 核心突破：GAN解决了生成质量问题；扩散模型解决了训练稳定性；CLIP打通了文本-图像语义空间。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('扩散模型')">📅 扩散模型/GAN</span>
+      <span class="br-tag timeline" onclick="jumpEvent('扩散模型')">📅 扩散模型 2020</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('对抗训练')">📖 对抗训练</span>
+      <span class="br-tag persons" onclick="jumpPerson('goodfellow')">👤 Goodfellow</span>
+      <span class="br-tag persons" onclick="jumpPerson('lecun')">👤 LeCun</span>
+      <span class="br-tag analysismap" onclick="showCtx('gen')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#1a3a3a,#0f766e)">
+    <div class="dir-icon">🤖</div>
+    <div><div class="dir-name">AI Agent</div><div class="dir-en">Autonomous Agents</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">1990s</span><span>BDI智能体（信念-欲望-意图），符号规划</span></div>
+    <div class="dir-phase"><span class="dir-yr">2016</span><span>AlphaGo：单任务超人类智能体</span></div>
+    <div class="dir-phase"><span class="dir-yr">2023</span><span>AutoGPT/LangChain：LLM驱动的自主Agent</span></div>
+    <div class="dir-phase"><span class="dir-yr">2024</span><span>Claude Computer Use；OpenAI Operator；MCP协议标准化</span></div>
+    <div class="dir-phase"><span class="dir-yr">2025</span><span>多Agent协作；Agent OS；AI员工概念落地</span></div>
+    <div class="dir-key">🔑 核心突破：LLM提供了通用推理能力，工具调用+记忆+规划使Agent从"对话"升级为"行动"。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('AI Agent')">📅 AI Agent 2023</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('强化学习')">📖 强化学习</span>
+      <span class="br-tag analysismap" onclick="showCtx('agent')">🗺️ 分析地图</span>
+      <span class="br-tag persons" onclick="jumpPerson('russell')">👤 Russell</span>
+    </div>
+  </div>
+</div>
+
+<div class="dir-card">
+  <div class="dir-hd" style="background:linear-gradient(135deg,#2a1a3a,#7c3aed)">
+    <div class="dir-icon">🧬</div>
+    <div><div class="dir-name">多模态与科学AI</div><div class="dir-en">Multimodal &amp; Science AI</div></div>
+  </div>
+  <div class="dir-body">
+    <div class="dir-phase"><span class="dir-yr">2021</span><span>CLIP：图文对比学习，统一多模态表示</span></div>
+    <div class="dir-phase"><span class="dir-yr">2022</span><span>AlphaFold2：蛋白质结构预测，诺贝尔化学奖</span></div>
+    <div class="dir-phase"><span class="dir-yr">2023</span><span>GPT-4V：多模态大模型；Med-PaLM医疗AI</span></div>
+    <div class="dir-phase"><span class="dir-yr">2024</span><span>Gemini 1.5：原生多模态；Sora视频生成</span></div>
+    <div class="dir-phase"><span class="dir-yr">2025</span><span>AI for Science：材料发现、药物设计、气候预测</span></div>
+    <div class="dir-key">🔑 核心突破：统一的Transformer架构使不同模态（文本/图像/音频/视频）可以在同一框架下处理。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('CLIP')">📅 CLIP 2021</span>
+      <span class="br-tag timeline" onclick="jumpEvent('Transformer')">📅 AlphaFold用到Transformer</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('深度学习')">📖 深度学习</span>
+      <span class="br-tag persons" onclick="jumpPerson('hassabis')">👤 Hassabis</span>
+      <span class="br-tag analysismap" onclick="showCtx('multimodal')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+</div>
+    </div>
+
+    <!-- PARADIGMS PANEL -->
+    <div class="panel" id="panel-paradigms">
+      <div class="sec-h">范式转变 · 谁推翻了谁</div>
+      <div class="sec-sub">AI历史上六次重大范式转变，每次都颠覆了上一代的核心假设。</div>
+      <div class="shift-list" id="shift-list"><div class="shift-card">
+  <div class="shift-num">01</div>
+  <div class="shift-body">
+    <div class="shift-title">符号主义 → 连接主义</div>
+    <div class="shift-period">1980s → 1990s</div>
+    <div class="shift-desc">符号AI（专家系统）假设：智能 = 符号操作 + 逻辑规则。连接主义（神经网络）假设：智能 = 大量简单单元的并行计算。核心颠覆：知识不需要显式编码，可以从数据中学习。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>专家系统的知识工程成本极高，无法扩展；神经网络可以自动从数据中提取特征，泛化能力更强。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEra('era-1950')">📅 1950s 符号主义起源</span>
+      <span class="br-tag timeline" onclick="jumpEra('era-1980')">📅 1980s 连接主义复兴</span>
+      <span class="br-tag persons" onclick="jumpPerson('minsky')">👤 Minsky</span>
+      <span class="br-tag persons" onclick="jumpPerson('hinton')">👤 Hinton</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm01')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="shift-card">
+  <div class="shift-num">02</div>
+  <div class="shift-body">
+    <div class="shift-title">手工特征 → 深度特征</div>
+    <div class="shift-period">2012 AlexNet</div>
+    <div class="shift-desc">传统机器学习：人工设计特征（SIFT、HOG、TF-IDF）+ 简单分类器（SVM）。深度学习：端到端学习，从原始数据直接学习特征表示。核心颠覆：特征工程不再需要领域专家，模型自己学。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>GPU算力+大数据+深度网络的组合，使自动学习的特征质量超越了人工设计的特征。ImageNet竞赛是分水岭。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('AlexNet')">📅 AlexNet 2012</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('深度学习')">📖 深度学习</span>
+      <span class="br-tag persons" onclick="jumpPerson('hinton')">👤 Hinton</span>
+      <span class="br-tag persons" onclick="jumpPerson('lecun')">👤 LeCun</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm02')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="shift-card">
+  <div class="shift-num">03</div>
+  <div class="shift-body">
+    <div class="shift-title">任务专用模型 → 预训练+微调</div>
+    <div class="shift-period">2018 BERT/GPT</div>
+    <div class="shift-desc">之前：每个任务训练一个专用模型，需要大量标注数据。之后：在海量无标注数据上预训练通用模型，再用少量标注数据微调。核心颠覆：无标注数据的价值被充分挖掘。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>Transformer的自注意力机制能捕捉长距离依赖，自监督预训练（预测下一个词/掩码词）可以利用互联网上的海量文本。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('BERT')">📅 BERT 2018</span>
+      <span class="br-tag timeline" onclick="jumpEvent('GPT')">📅 GPT 2018</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('Transformer')">📖 Transformer</span>
+      <span class="br-tag persons" onclick="jumpPerson('vaswani')">👤 Vaswani团队</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm03')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="shift-card">
+  <div class="shift-num">04</div>
+  <div class="shift-body">
+    <div class="shift-title">微调范式 → 提示词范式</div>
+    <div class="shift-period">2020 GPT-3</div>
+    <div class="shift-desc">GPT-3之前：预训练模型需要针对每个任务微调（更新参数）。GPT-3之后：通过In-context Learning，只需在提示词中给几个例子，无需更新参数即可完成新任务。核心颠覆：模型使用方式从"训练"变为"提示"。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>规模定律使大模型具备了强大的上下文理解能力，少样本学习成为可能。提示词工程成为新的"编程语言"。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('GPT-3')">📅 GPT-3 2020</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('规模定律')">📖 规模定律</span>
+      <span class="br-tag persons" onclick="jumpPerson('altman')">👤 Altman / OpenAI</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm04')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="shift-card">
+  <div class="shift-num">05</div>
+  <div class="shift-body">
+    <div class="shift-title">能力导向 → 对齐导向</div>
+    <div class="shift-period">2022 RLHF/ChatGPT</div>
+    <div class="shift-desc">之前：追求模型能力（更准确、更强大）。之后：追求模型对齐（更有用、更无害、更诚实）。核心颠覆：意识到"能力强"≠"对人类有益"，对齐问题成为核心挑战。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>GPT-3展示了强大能力的同时，也展示了有害输出的风险。RLHF证明了用人类反馈可以有效引导模型行为，使AI真正"可用"。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('ChatGPT')">📅 ChatGPT 2022</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('RLHF')">📖 RLHF</span>
+      <span class="br-tag persons" onclick="jumpPerson('altman')">👤 Altman</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm05')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+
+<div class="shift-card">
+  <div class="shift-num">06</div>
+  <div class="shift-body">
+    <div class="shift-title">训练时扩展 → 推理时扩展</div>
+    <div class="shift-period">2024 o1/DeepSeek-R1</div>
+    <div class="shift-desc">之前：提升性能 = 训练更大的模型（更多参数、更多数据、更多算力）。之后：提升性能 = 推理时投入更多计算（更长的思维链、更多的搜索）。核心颠覆：Test-time Compute成为新的扩展维度。</div>
+    <div class="shift-why"><span class="sw-lbl">为何被颠覆</span>训练规模的边际收益递减，而推理时计算（CoT、MCTS）可以在不增加参数的情况下大幅提升复杂推理能力。o1/R1是这一范式的标志性产品。</div>
+    <div class="bridge-row">
+      <span class="bridge-row-lbl">关联</span>
+      <span class="br-tag timeline" onclick="jumpEvent('o1')">📅 o1 2024</span>
+      <span class="br-tag timeline" onclick="jumpEvent('DeepSeek')">📅 DeepSeek-R1 2025</span>
+      <span class="br-tag glossary" onclick="jumpGlossary('蒙特卡洛方法')">📖 MCTS</span>
+      <span class="br-tag persons" onclick="jumpPerson('altman')">👤 OpenAI团队</span>
+      <span class="br-tag analysismap" onclick="showCtx('paradigm06')">🗺️ 分析地图</span>
+    </div>
+  </div>
+</div>
+</div>
+    </div>
+    <!-- MY QUESTIONS PANEL -->
+    <!-- PERSONS PANEL -->
+    <div class="panel" id="panel-persons">
+      <div class="sec-h">👤 人物志</div>
+      <div class="sec-sub">AI发展史上的关键人物。点击卡片展开详情，查看主要贡献、师承关系，以及与其他tab的关联节点。</div>
+      <div class="persons-topbar">
+        <input class="persons-search" type="text" placeholder="🔍 搜索人物..." oninput="filterPersons(this.value)">
+        <div class="persons-filter">
+          <button class="f-btn active" onclick="filterPersonsByTag('all',this)">全部</button>
+          <button class="f-btn" onclick="filterPersonsByTag('符号主义',this)">符号主义</button>
+          <button class="f-btn" onclick="filterPersonsByTag('连接主义',this)">连接主义</button>
+          <button class="f-btn" onclick="filterPersonsByTag('强化学习',this)">强化学习</button>
+          <button class="f-btn" onclick="filterPersonsByTag('大模型',this)">大模型</button>
+          <button class="f-btn" onclick="filterPersonsByTag('产业',this)">产业</button>
+        </div>
+      </div>
+      <div class="persons-grid" id="persons-grid">
+
+<!-- ── 图灵 ── -->
+<div class="person-card" id="person-turing" data-tags="符号主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">🧮</div>
+    <div class="person-meta">
+      <div class="person-name">艾伦·图灵</div>
+      <div class="person-en">Alan Turing · 1912–1954</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(91,141,238,.2);color:var(--accent)">符号主义</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">奠基人</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">计算机科学与AI的奠基人。二战期间破解德军Enigma密码，战后提出可计算性理论与图灵机模型，定义了"计算"的数学本质。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">图灵机（1936）：定义了通用计算的理论模型，奠定计算机科学基础</div>
+        <div class="person-contrib">图灵测试（1950）：提出"机器能思考吗"，定义了AI的终极目标</div>
+        <div class="person-contrib">《计算机器与智能》：AI领域第一篇重要论文</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('minsky')">🤝 影响了 Minsky</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('russell')">🤝 影响了 Russell</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1950')">📅 1950s 符号主义起源</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('图灵测试')">📖 图灵测试</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── 明斯基 ── -->
+<div class="person-card" id="person-minsky" data-tags="符号主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#2d1b69,#4c1d95)">🧠</div>
+    <div class="person-meta">
+      <div class="person-name">马文·明斯基</div>
+      <div class="person-en">Marvin Minsky · 1927–2016</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(91,141,238,.2);color:var(--accent)">符号主义</span>
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">MIT AI Lab</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">MIT AI实验室联合创始人，符号主义AI的核心人物。与麦卡锡共同组织了1956年达特茅斯会议——AI作为独立学科的诞生时刻。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">1956年达特茅斯会议联合发起人，"人工智能"一词在此正式确立</div>
+        <div class="person-contrib">《感知机》（1969）：指出单层感知机的局限性，导致第一次AI寒冬</div>
+        <div class="person-contrib">框架理论（Frame Theory）：知识表示的重要方法</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('mccarthy')">🤝 合作 McCarthy</span>
+        <span class="person-rel rival" onclick="event.stopPropagation();jumpPerson('hinton')">⚔️ 论战 Hinton</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1950')">📅 1950s 达特茅斯会议</span>
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1970')">📅 1970s AI寒冬</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── 麦卡锡 ── -->
+<div class="person-card" id="person-mccarthy" data-tags="符号主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1a3a2a,#065f46)">⚙️</div>
+    <div class="person-meta">
+      <div class="person-name">约翰·麦卡锡</div>
+      <div class="person-en">John McCarthy · 1927–2011</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(91,141,238,.2);color:var(--accent)">符号主义</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">AI命名者</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">"人工智能"一词的创造者，Lisp语言发明人，斯坦福AI实验室创始人。符号主义AI的旗手，终身坚信逻辑推理是通向AGI的道路。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">创造"Artificial Intelligence"术语（1956），组织达特茅斯会议</div>
+        <div class="person-contrib">发明Lisp语言（1958），AI研究的主要编程语言长达数十年</div>
+        <div class="person-contrib">情境演算（Situation Calculus）：AI规划的形式化基础</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('minsky')">🤝 合作 Minsky</span>
+        <span class="person-rel student" onclick="event.stopPropagation();jumpPerson('russell')">🎓 影响了 Russell</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1950')">📅 1950s 符号主义起源</span>
+      <span class="br-tag analysismap" onclick="event.stopPropagation();jumpFmapL1()">🗺️ 研究哲学层</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hinton ── -->
+<div class="person-card" id="person-hinton" data-tags="连接主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#3b1a5f,#6d28d9)">🔗</div>
+    <div class="person-meta">
+      <div class="person-name">杰弗里·辛顿</div>
+      <div class="person-en">Geoffrey Hinton · 1947–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">连接主义</span>
+        <span class="person-tag" style="background:rgba(251,191,36,.15);color:#fbbf24">图灵奖 2018</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">"深度学习教父"，连接主义的核心推动者。在神经网络最黑暗的年代坚持研究，最终用AlexNet（2012）引爆深度学习革命。2023年离开Google，公开警告AI风险。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">反向传播算法（1986）：使深层神经网络的训练成为可能</div>
+        <div class="person-contrib">Boltzmann机、深度信念网络：深度学习的早期架构</div>
+        <div class="person-contrib">AlexNet（2012，学生Krizhevsky）：ImageNet竞赛革命，深度学习时代开启</div>
+        <div class="person-contrib">Dropout、Capsule Networks等正则化与架构创新</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel student" onclick="event.stopPropagation();jumpPerson('lecun')">🎓 同门 LeCun</span>
+        <span class="person-rel student" onclick="event.stopPropagation();jumpPerson('bengio')">🎓 同门 Bengio</span>
+        <span class="person-rel rival" onclick="event.stopPropagation();jumpPerson('minsky')">⚔️ 论战 Minsky</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1980')">📅 1980s 连接主义复兴</span>
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('AlexNet')">📅 AlexNet 2012</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('深度学习')">📖 深度学习</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── LeCun ── -->
+<div class="person-card" id="person-lecun" data-tags="连接主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1e3a5f,#0369a1)">🖼️</div>
+    <div class="person-meta">
+      <div class="person-name">杨立昆</div>
+      <div class="person-en">Yann LeCun · 1960–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">连接主义</span>
+        <span class="person-tag" style="background:rgba(251,191,36,.15);color:#fbbf24">图灵奖 2018</span>
+        <span class="person-tag" style="background:rgba(91,141,238,.15);color:var(--accent)">Meta AI</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">卷积神经网络（CNN）之父，Meta AI首席科学家。在Hinton实验室做博士后，发明了LeNet，奠定了计算机视觉深度学习的基础。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">LeNet（1989）：第一个实用CNN，用于手写数字识别（银行支票）</div>
+        <div class="person-contrib">卷积操作的权重共享思想：大幅减少参数，捕捉空间局部特征</div>
+        <div class="person-contrib">自监督学习倡导者：认为这是通向AGI的关键路径</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel teacher" onclick="event.stopPropagation();jumpPerson('hinton')">👨‍🏫 师从 Hinton</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('bengio')">🤝 合作 Bengio</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEra('era-1980')">📅 1980s 连接主义复兴</span>
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('AlexNet')">📅 深度学习革命</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('深度学习')">📖 深度学习</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Bengio ── -->
+<div class="person-card" id="person-bengio" data-tags="连接主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1a3a2a,#065f46)">📊</div>
+    <div class="person-meta">
+      <div class="person-name">约书亚·本吉奥</div>
+      <div class="person-en">Yoshua Bengio · 1964–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">连接主义</span>
+        <span class="person-tag" style="background:rgba(251,191,36,.15);color:#fbbf24">图灵奖 2018</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">Mila</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">蒙特利尔学习算法研究所（Mila）创始人，深度学习三巨头之一。专注于序列模型、注意力机制和生成模型的理论研究，是Transformer的重要思想来源之一。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">神经语言模型（2003）：第一个用神经网络建模语言，引入词嵌入概念</div>
+        <div class="person-contrib">注意力机制（2015，与Bahdanau）：Transformer的直接前身</div>
+        <div class="person-contrib">GAN理论分析、变分自编码器（VAE）的重要贡献者</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('hinton')">🤝 合作 Hinton</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('lecun')">🤝 合作 LeCun</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('Transformer')">📅 Transformer 2017</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('Transformer')">📖 Transformer</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Sutton ── -->
+<div class="person-card" id="person-sutton" data-tags="强化学习" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#3b1a5f,#7c3aed)">🎮</div>
+    <div class="person-meta">
+      <div class="person-name">理查德·萨顿</div>
+      <div class="person-en">Richard Sutton · 1956–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">强化学习</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">RL教父</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">强化学习领域的奠基人，《强化学习》教材作者（与Barto合著），该书是RL领域的圣经。提出了TD学习、Q学习等核心算法，并撰写了著名的"苦涩的教训"。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">时序差分学习（TD Learning）：RL的核心算法框架</div>
+        <div class="person-contrib">《强化学习：导论》：RL领域最权威的教材</div>
+        <div class="person-contrib">"苦涩的教训"（2019）：论证通用方法+算力终将胜过人类先验知识</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel student" onclick="event.stopPropagation();jumpPerson('hassabis')">🎓 影响了 Hassabis</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('强化学习')">📖 强化学习</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('动态规划')">📖 动态规划</span>
+      <span class="br-tag analysismap" onclick="event.stopPropagation();jumpFmapArch04()">🗺️ 基于效用架构</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hassabis ── -->
+<div class="person-card" id="person-hassabis" data-tags="连接主义 强化学习 产业" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1a3a3a,#0f766e)">🧬</div>
+    <div class="person-meta">
+      <div class="person-name">德米斯·哈萨比斯</div>
+      <div class="person-en">Demis Hassabis · 1976–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">DeepMind</span>
+        <span class="person-tag" style="background:rgba(251,191,36,.15);color:#fbbf24">诺贝尔化学奖 2024</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">DeepMind联合创始人兼CEO，将深度强化学习推向世界舞台。AlphaGo、AlphaFold的主导者，2024年因AlphaFold获诺贝尔化学奖。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">AlphaGo（2016）：深度RL+MCTS，围棋击败世界冠军李世石</div>
+        <div class="person-contrib">AlphaFold2（2020）：解决蛋白质折叠50年难题，2024年诺贝尔化学奖</div>
+        <div class="person-contrib">DQN（2013）：深度Q网络，Atari游戏超越人类，开创深度RL</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel teacher" onclick="event.stopPropagation();jumpPerson('sutton')">👨‍🏫 受 Sutton 影响</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('russell')">🤝 同领域 Russell</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('AlphaGo')">📅 AlphaGo 2016</span>
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('Transformer')">📅 AlphaFold用到Transformer</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('蒙特卡洛方法')">📖 MCTS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Russell ── -->
+<div class="person-card" id="person-russell" data-tags="符号主义 连接主义" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">📚</div>
+    <div class="person-meta">
+      <div class="person-name">斯图尔特·罗素</div>
+      <div class="person-en">Stuart Russell · 1962–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(91,141,238,.2);color:var(--accent)">AI安全</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">AIMA作者</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">《人工智能：现代方法》（AIMA）作者，AI教育领域最具影响力的人物。本学习地图的分析框架正是基于他的智能体理论。近年专注AI安全研究。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">《人工智能：现代方法》：全球最广泛使用的AI教材，已出版4版</div>
+        <div class="person-contrib">理性智能体框架：将AI统一为"感知-行动"的理性决策系统</div>
+        <div class="person-contrib">AI安全倡导：《Human Compatible》提出对齐问题的系统性解决思路</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel teacher" onclick="event.stopPropagation();jumpPerson('mccarthy')">👨‍🏫 受 McCarthy 影响</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('hassabis')">🤝 同领域 Hassabis</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag analysismap" onclick="event.stopPropagation();switchTab('analysismap')">🗺️ 分析地图框架来源</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Altman ── -->
+<div class="person-card" id="person-altman" data-tags="大模型 产业" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">🚀</div>
+    <div class="person-meta">
+      <div class="person-name">山姆·奥特曼</div>
+      <div class="person-en">Sam Altman · 1985–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(91,141,238,.2);color:var(--accent)">OpenAI</span>
+        <span class="person-tag" style="background:rgba(251,146,60,.15);color:#fb923c">产业</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">OpenAI CEO，将AI从学术研究推向大众产品的关键人物。主导了GPT-3、ChatGPT、GPT-4、o1等一系列改变世界的产品发布。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">主导ChatGPT发布（2022）：史上增长最快的消费产品，引爆全球AI热潮</div>
+        <div class="person-contrib">推动RLHF对齐技术产品化，使AI真正"可用"</div>
+        <div class="person-contrib">o1系列（2024）：推理时扩展范式的标志性产品</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel rival" onclick="event.stopPropagation();jumpPerson('musk')">⚔️ 决裂 Musk</span>
+        <span class="person-rel collab" onclick="event.stopPropagation();jumpPerson('hassabis')">🤝 竞争 Hassabis</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('ChatGPT')">📅 ChatGPT 2022</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('RLHF')">📖 RLHF</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Goodfellow ── -->
+<div class="person-card" id="person-goodfellow" data-tags="连接主义 大模型" onclick="togglePerson(this)">
+  <div class="person-hd">
+    <div class="person-avatar" style="background:linear-gradient(135deg,#3a1a1a,#991b1b)">🎨</div>
+    <div class="person-meta">
+      <div class="person-name">伊恩·古德费洛</div>
+      <div class="person-en">Ian Goodfellow · 1985–</div>
+      <div class="person-tags">
+        <span class="person-tag" style="background:rgba(167,139,250,.2);color:var(--accent2)">生成模型</span>
+        <span class="person-tag" style="background:rgba(52,211,153,.15);color:var(--accent3)">GAN之父</span>
+      </div>
+    </div>
+    <span class="person-arrow">▶</span>
+  </div>
+  <div class="person-body">
+    <div class="person-section">
+      <div class="person-sec-lbl">身份定位</div>
+      <div class="person-desc">GAN（生成对抗网络）发明人，Bengio的学生。据说GAN的想法是在酒吧里一夜之间想到并实现的。</div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">核心贡献</div>
+      <div class="person-contrib-list">
+        <div class="person-contrib">GAN（2014）：生成对抗网络，开创了生成模型的新范式</div>
+        <div class="person-contrib">《深度学习》教材（与Bengio、Courville合著）：领域标准教材</div>
+        <div class="person-contrib">对抗样本研究：揭示了深度学习的脆弱性</div>
+      </div>
+    </div>
+    <div class="person-section">
+      <div class="person-sec-lbl">关系网络</div>
+      <div class="person-relations">
+        <span class="person-rel teacher" onclick="event.stopPropagation();jumpPerson('bengio')">👨‍🏫 师从 Bengio</span>
+      </div>
+    </div>
+    <div class="person-bridge-row">
+      <span class="br-tag timeline" onclick="event.stopPropagation();jumpEvent('GAN')">📅 GAN 2014</span>
+      <span class="br-tag glossary" onclick="event.stopPropagation();jumpGlossary('对抗训练')">📖 对抗训练</span>
+    </div>
+  </div>
+</div>
+
+      </div><!-- /persons-grid -->
+    </div><!-- /panel-persons -->
+
+    <!-- MY QUESTIONS PANEL -->
+    <div class="panel" id="panel-myquestions">
+      <div class="sec-h">💡 我的问题</div>
+      <div class="sec-sub">记录学习过程中冒出的问题。支持 <strong>@概念名</strong> 或 <strong>@era-xxx</strong> 关联到具体知识点，点击可直接跳转。</div>
+      <div class="q-topbar">
+        <button class="q-add-btn" onclick="openAddQuestion()">＋ 记录问题</button>
+        <div class="q-filter-bar">
+          <button class="q-f-btn active" onclick="filterQ('all',this)">全部</button>
+          <button class="q-f-btn" onclick="filterQ('todo',this)">🟡 待探索</button>
+          <button class="q-f-btn" onclick="filterQ('done',this)">🟢 已理解</button>
+          <button class="q-f-btn" onclick="filterQ('doubt',this)">🔴 存疑</button>
+        </div>
+      </div>
+      <div class="q-list" id="q-list">
+        <div class="q-empty" id="q-empty">还没有问题，点击「＋ 记录问题」开始记录</div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYSIS MAP PANEL ===== -->
+    <div class="panel active" id="panel-analysismap">
+      <div class="sec-h">🗺️ 分析地图</div>
+      <div class="sec-sub">Russell 智能体框架的四层导航地图。从研究哲学到具体架构，每层都连接到学习地图的对应节点。</div>
+
+      <div class="fmap-howto">
+        <strong>怎么用这张地图：</strong>在「历史演进」里看到某个技术 → 来第四层找它属于哪种架构 → 往上追溯它解决的是哪类环境问题（第三层）→ 再往上看它背后的研究哲学（第一层）。反过来也可以：从第一层的哲学出发，往下找对应的技术实现。
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 第一层：四大研究哲学                        -->
+      <!-- ══════════════════════════════════════════ -->
+<div class="fmap-layer" id="fmap-l1">
+<div class="fmap-layer-hd">
+<div class="fmap-layer-num" style="background:rgba(91,141,238,.2);color:var(--accent)">L1</div>
+          <span class="fmap-layer-title">四大研究哲学</span>
+          <span class="fmap-layer-sub">— Russell 第1章：AI 的四种定义方向，决定了整个领域的分裂与融合</span>
+        </div>
+        <div class="fmap-quadrants">
+          <div class="fmap-quad">
+            <div class="fmap-quad-name">像人类一样思考</div>
+            <div class="fmap-quad-en">Think Humanly · 认知建模</div>
+            <div class="fmap-quad-desc">目标是复现人类的思维过程本身，而不只是结果。需要先理解人脑如何工作，再用计算机模拟。代表：认知科学、神经网络早期研究。</div>
+            <div class="fmap-quad-links">
+              <span style="font-size:9px;color:var(--text3);display:block;margin-bottom:3px;">代表性技术遗产（非穷举）</span>
+              <span class="fmap-link ev" onclick="jumpEvent('感知机')">@感知机 <span style="font-size:9px;opacity:.6">算法</span></span>
+              <span class="fmap-link ev" onclick="jumpEvent('反向传播')">@反向传播 <span style="font-size:9px;opacity:.6">算法</span></span>
+            </div>
+          </div>
+          <div class="fmap-quad">
+            <div class="fmap-quad-name">像人类一样行动</div>
+            <div class="fmap-quad-en">Act Humanly · 图灵测试</div>
+            <div class="fmap-quad-desc">不管内部机制，只要行为上无法与人类区分就算成功。图灵测试是这个方向的操作化定义。代表：对话系统、ChatGPT。</div>
+            <div class="fmap-quad-links">
+              <span style="font-size:9px;color:var(--text3);display:block;margin-bottom:3px;">代表性技术遗产（非穷举）</span>
+              <span class="fmap-link ev" onclick="jumpEvent('图灵测试')">@图灵测试 <span style="font-size:9px;opacity:.6">评估标准</span></span>
+              <span class="fmap-link ev" onclick="jumpEvent('GPT-3')">@GPT-3 <span style="font-size:9px;opacity:.6">系统/产品</span></span>
+            </div>
+          </div>
+          <div class="fmap-quad">
+            <div class="fmap-quad-name">理性地思考</div>
+            <div class="fmap-quad-en">Think Rationally · 逻辑推理</div>
+            <div class="fmap-quad-desc">用形式逻辑规则表示知识，通过演绎推理得出结论。符号主义的核心路线。问题：现实世界的知识很难完全形式化。</div>
+            <div class="fmap-quad-links">
+              <span style="font-size:9px;color:var(--text3);display:block;margin-bottom:3px;">代表性技术遗产（非穷举）</span>
+              <span class="fmap-link ev" onclick="jumpEvent('达特茅斯会议')">@达特茅斯会议 <span style="font-size:9px;opacity:.6">历史事件</span></span>
+              <span class="fmap-link ev" onclick="jumpEvent('专家系统')">@专家系统 <span style="font-size:9px;opacity:.6">技术路线</span></span>
+            </div>
+          </div>
+          <div class="fmap-quad bet">
+            <div class="fmap-quad-bet">✦ Russell 押注</div>
+            <div class="fmap-quad-name">理性地行动</div>
+            <div class="fmap-quad-en">Act Rationally · 理性智能体</div>
+            <div class="fmap-quad-desc">不要求像人，不要求用逻辑，只要求在给定信息下做出最优决策。这是 Russell 全书的核心立场，也是现代 AI 主流范式的基础。</div>
+            <div class="fmap-quad-links">
+              <span style="font-size:9px;color:var(--text3);display:block;margin-bottom:3px;">代表性技术遗产（在 L3 也作为适用工具出现）</span>
+              <span class="fmap-link" onclick="jumpGlossary('期望效用')">@期望效用 <span style="font-size:9px;opacity:.6">理论框架</span></span>
+              <span class="fmap-link" onclick="jumpGlossary('强化学习')">@强化学习 <span style="font-size:9px;opacity:.6">学习范式</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fmap-arrow">↓ &nbsp; 理性智能体需要一个分析工具来描述它的任务</div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 第二层：PEAS 框架                           -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="fmap-layer">
+        <div class="fmap-layer-hd">
+          <div class="fmap-layer-num" style="background:rgba(52,211,153,.2);color:var(--accent3)">L2</div>
+          <span class="fmap-layer-title">PEAS 框架</span>
+          <span class="fmap-layer-sub">— 分析任何 AI 系统的入口，四个问题定义智能体的任务边界</span>
+        </div>
+        <div class="fmap-peas">
+          <div class="fmap-peas-item" style="border-top:3px solid var(--accent)">
+            <div class="fmap-peas-letter" style="color:var(--accent)">P</div>
+            <div class="fmap-peas-name">性能度量</div>
+            <div class="fmap-peas-q">优化什么？<br>成功的标准是什么？</div>
+            <div class="fmap-peas-eg"><strong style="color:var(--accent3)">最难定义。</strong>定义错了，再好的架构也会产生错误行为。<br>例：抖音优化点击率 → 信息茧房</div>
+          </div>
+          <div class="fmap-peas-item" style="border-top:3px solid var(--accent3)">
+            <div class="fmap-peas-letter" style="color:var(--accent3)">E</div>
+            <div class="fmap-peas-name">环境</div>
+            <div class="fmap-peas-q">在哪里运行？<br>能感知到什么？</div>
+            <div class="fmap-peas-eg">物理世界 / 语言空间 / 棋盘 / 用户行为流<br>环境类型决定传感器设计</div>
+          </div>
+          <div class="fmap-peas-item" style="border-top:3px solid var(--accent2)">
+            <div class="fmap-peas-letter" style="color:var(--accent2)">A</div>
+            <div class="fmap-peas-name">执行器</div>
+            <div class="fmap-peas-q">能做什么动作？<br>动作空间多大？</div>
+            <div class="fmap-peas-eg">离散（落子）/ 连续（转方向盘）/ 生成文本<br>动作空间大小影响搜索难度</div>
+          </div>
+          <div class="fmap-peas-item" style="border-top:3px solid var(--accent4)">
+            <div class="fmap-peas-letter" style="color:var(--accent4)">S</div>
+            <div class="fmap-peas-name">传感器</div>
+            <div class="fmap-peas-q">能感知什么？<br>感知是否完整？</div>
+            <div class="fmap-peas-eg">传感器覆盖范围决定可观测性<br>部分可观测 → 需要内部状态或概率推理</div>
+          </div>
+        </div>
+      </div><!-- end fmap-layer L2 -->
+
+      <div class="fmap-arrow">↓ 环境特征决定算法选型</div>
+
+      <!-- 第三层：环境七维度 -->
+      <div class="fmap-layer">
+          <div class="fmap-layer-hd">
+            <div class="fmap-layer-num" style="background:rgba(52,211,153,.15);color:var(--accent3)">3</div>
+            <div class="fmap-layer-title">环境七维度</div>
+            <div class="fmap-layer-sub">— 每个维度对应不同的技术选择</div>
+          </div>
+          <div class="fmap-dims">
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">🔭 可观测性</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">完全可观测</div>
+                传感器能看到环境完整状态，无隐藏信息
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo" onclick="jumpGlossary('搜索算法')">搜索算法</span><span class="algo" onclick="jumpGlossary('博弈树')">博弈树</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">部分可观测</div>
+                传感器只能看到部分状态，需要推断看不见的部分
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method" onclick="jumpGlossary('贝叶斯网络')">概率推理</span><span class="method">内部状态建模</span></span><span class="tag-group"><span class="tag-group-lbl">学习范式</span><span class="paradigm" onclick="jumpGlossary('强化学习')">强化学习 ↓L1也出现</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">👥 智能体数量</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">单智能体</div>
+                只有自己在行动，环境不会策略性地对抗
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo">优化算法</span></span><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">规划</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">多智能体</div>
+                其他智能体会根据你的行为调整策略（策略性互动）
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">理论框架</span><span class="theory" onclick="jumpGlossary('博弈论')">博弈论</span></span><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method" onclick="jumpGlossary('对抗训练')">对抗训练</span><span class="method" onclick="jumpGlossary('RLHF')">RLHF</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">🎲 确定性</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">确定性</div>
+                动作结果完全可预测，无随机因素
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo">经典搜索</span></span><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method" onclick="jumpEra('era-2006')">规划算法</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">随机性</div>
+                动作结果有概率分布，需要处理不确定性
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">理论框架</span><span class="theory" onclick="jumpGlossary('期望效用')">期望效用 ↓L1也出现</span></span><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo" onclick="jumpGlossary('蒙特卡洛方法')">蒙特卡洛</span></span><span class="tag-group"><span class="tag-group-lbl">学习范式</span><span class="paradigm" onclick="jumpGlossary('强化学习')">强化学习 ↓L1也出现</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">⏱️ 时序结构</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">片段式</div>
+                每次决策独立，当前动作不影响未来情境
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">分类器</span><span class="method">即时决策</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">序贯</div>
+                当前动作影响未来所有状态，需要长期规划
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo">搜索树</span></span><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">规划</span></span><span class="tag-group"><span class="tag-group-lbl">学习范式</span><span class="paradigm" onclick="jumpGlossary('强化学习')">强化学习</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">🌊 动态性</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">静态</div>
+                智能体思考时环境不变，可以慢慢计算
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">离线规划</span><span class="method">批量学习</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">动态</div>
+                环境在智能体思考时持续变化，需要实时响应
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method" onclick="jumpGlossary('在线学习')">在线学习</span><span class="method">反应式架构</span><span class="method">流式处理</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">📐 连续性</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">离散</div>
+                状态和动作都是有限的可枚举集合
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo">表格Q学习</span><span class="algo">枚举搜索</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">连续</div>
+                状态或动作是连续值，无法枚举
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo" onclick="jumpGlossary('函数逼近')">函数逼近</span><span class="algo">梯度方法</span></span><span class="tag-group"><span class="tag-group-lbl">学习范式</span><span class="paradigm" onclick="jumpGlossary('深度学习')">深度学习</span></span></div>
+              </div>
+            </div>
+
+            <div class="fmap-dim-row">
+              <div class="fmap-dim-name">📖 已知性</div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl easy">已知环境</div>
+                智能体知道环境的转移规律（有模型）
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">算法</span><span class="algo" onclick="jumpGlossary('动态规划')">动态规划</span></span><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">基于模型规划</span></span></div>
+              </div>
+              <div class="fmap-dim-opt">
+                <div class="fmap-dim-opt-lbl hard">未知环境</div>
+                智能体不知道规律，需要从经验中学习
+                <div class="fmap-dim-algo"><span class="tag-group"><span class="tag-group-lbl">方法</span><span class="method">探索策略</span></span><span class="tag-group"><span class="tag-group-lbl">学习范式</span><span class="paradigm" onclick="jumpGlossary('强化学习')">无模型RL</span><span class="paradigm" onclick="jumpGlossary('深度学习')">深度学习</span></span></div>
+              </div>
+            </div>
+
+          </div>
+      </div><!-- end fmap-layer L3 -->
+
+      <div class="fmap-arrow">↓ 架构选择取决于内部状态的复杂程度</div>
+
+<!-- 第四层：四种智能体程序 -->
+<div class="fmap-layer">
+<div class="fmap-layer-hd">
+<div class="fmap-layer-num" style="background:rgba(167,139,250,.15);color:var(--accent2)">4</div>
+<div class="fmap-layer-title">四种智能体程序</div>
+<div class="fmap-layer-sub">— 内部状态复杂度递增，连接历史演进节点（注：程序指决策逻辑，区别于运行程序的硬件平台“架构”）</div>
+          </div>
+          <div class="fmap-archs">
+
+            <div class="fmap-arch" style="border-top:3px solid var(--accent4)">
+              <div class="fmap-arch-num">程序 01</div>
+              <div class="fmap-arch-name">简单反射</div>
+              <div class="fmap-arch-en">Simple Reflex Agent</div>
+              <div class="fmap-arch-core">感知 → 查规则 → 动作<br>无内部状态，活在当下</div>
+              <div class="fmap-arch-when"><strong>适用：</strong>完全可观测 + 确定性 + 简单规则可描述</div>
+              <div class="fmap-arch-links">
+                <span style="font-size:9px;color:var(--text3);display:block;width:100%;margin-bottom:2px;">典型案例（非穷举）</span>
+                <span class="fmap-link ev" onclick="jumpEvent('感知机')">→ 感知机 <span style="font-size:9px;opacity:.6">算法</span></span>
+                <span class="fmap-link ev" onclick="jumpEvent('专家系统')">→ 专家系统 <span style="font-size:9px;opacity:.6">技术路线</span></span>
+              </div>
+            </div>
+
+            <div class="fmap-arch" style="border-top:3px solid var(--accent)">
+              <div class="fmap-arch-num">程序 02</div>
+              <div class="fmap-arch-name">基于模型的反射</div>
+              <div class="fmap-arch-en">Model-Based Reflex Agent</div>
+              <div class="fmap-arch-core">维护内部状态 + 转移模型<br>能推断看不见的东西</div>
+              <div class="fmap-arch-when"><strong>适用：</strong>部分可观测，需要跟踪隐藏状态</div>
+              <div class="fmap-arch-links">
+                <span style="font-size:9px;color:var(--text3);display:block;width:100%;margin-bottom:2px;">典型案例（非穷举）</span>
+                <span class="fmap-link" onclick="jumpGlossary('卡尔曼滤波')">→ 卡尔曼滤波 <span style="font-size:9px;opacity:.6">算法</span></span>
+                <span class="fmap-link" onclick="jumpGlossary('SLAM')">→ SLAM <span style="font-size:9px;opacity:.6">技术路线</span></span>
+              </div>
+            </div>
+
+            <div class="fmap-arch" style="border-top:3px solid var(--accent3)">
+              <div class="fmap-arch-num">程序 03</div>
+              <div class="fmap-arch-name">基于目标</div>
+              <div class="fmap-arch-en">Goal-Based Agent</div>
+              <div class="fmap-arch-core">搜索/规划达到目标状态<br>目标是二值的（达到/未达到）</div>
+              <div class="fmap-arch-when"><strong>适用：</strong>有明确目标 + 完全可观测 + 确定性</div>
+              <div class="fmap-arch-links">
+                <span style="font-size:9px;color:var(--text3);display:block;width:100%;margin-bottom:2px;">典型案例（非穷举）</span>
+                <span class="fmap-link ev" onclick="jumpEvent('AlphaGo')">→ AlphaGo <span style="font-size:9px;opacity:.6">系统/产品</span></span>
+                <span class="fmap-link ev" onclick="jumpEvent('深蓝')">→ 深蓝 <span style="font-size:9px;opacity:.6">系统/产品</span></span>
+              </div>
+            </div>
+
+            <div class="fmap-arch" id="fmap-arch04" style="border-top:3px solid var(--accent2)">
+              <div class="fmap-arch-num">程序 04</div>
+              <div class="fmap-arch-name">基于效用</div>
+              <div class="fmap-arch-en">Utility-Based Agent</div>
+              <div class="fmap-arch-core">效用函数权衡多目标<br>期望效用最大化处理不确定性</div>
+              <div class="fmap-arch-when"><strong>适用：</strong>多目标冲突 / 不确定性 / 需要权衡</div>
+              <div class="fmap-arch-links">
+                <span style="font-size:9px;color:var(--text3);display:block;width:100%;margin-bottom:2px;">典型案例（非穷举）</span>
+                <span class="fmap-link ev" onclick="jumpEvent('RLHF')">→ RLHF <span style="font-size:9px;opacity:.6">训练方法</span></span>
+                <span class="fmap-link" onclick="jumpGlossary('强化学习')">→ 强化学习 <span style="font-size:9px;opacity:.6">学习范式</span></span>
+                <span class="fmap-link" onclick="jumpGlossary('推荐系统')">→ 推荐系统 <span style="font-size:9px;opacity:.6">应用系统</span></span>
+              </div>
+            </div>
+
+          </div>
+      </div><!-- end fmap-layer L4 -->
+
+    </div><!-- end panel-analysismap -->
+
+  </main>
+</div>
+
+<!-- ===== ADD GLOSSARY MODAL ===== -->
+<div class="modal-overlay" id="modal-add-glossary">
+  <div class="modal-box">
+    <div class="modal-title">＋ 新增概念</div>
+    <div class="modal-field">
+      <div class="modal-label">术语（中文）</div>
+      <input class="modal-input" id="mg-term" placeholder="例：注意力机制">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">英文名</div>
+      <input class="modal-input" id="mg-en" placeholder="例：Attention Mechanism">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">分类</div>
+      <select class="modal-select" id="mg-cat">
+        <option value="数学基础">数学基础</option>
+        <option value="神经网络">神经网络</option>
+        <option value="训练方法">训练方法</option>
+        <option value="架构">架构</option>
+        <option value="大模型">大模型</option>
+        <option value="生成模型">生成模型</option>
+        <option value="Agent">Agent</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">概念描述</div>
+      <textarea class="modal-textarea" id="mg-desc" placeholder="用自己的话描述这个概念…"></textarea>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">桥接注释（可选）— 支持 @era-2017、@Transformer 等跳转标签</div>
+      <textarea class="modal-textarea" id="mg-note" placeholder="把这个概念和你已有的知识联系起来…&#10;例：@era-2017 中的 @Transformer 就是基于这个机制"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('modal-add-glossary')">取消</button>
+      <button class="modal-btn confirm" onclick="confirmAddGlossary()">添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD QUESTION MODAL ===== -->
+<div class="modal-overlay" id="modal-add-question">
+  <div class="modal-box">
+    <div class="modal-title">💡 记录问题</div>
+    <div class="modal-field">
+      <div class="modal-label">问题内容</div>
+      <textarea class="modal-textarea" id="mq-text" placeholder="写下你的问题…&#10;支持 @era-2017、@Transformer 等关联标签" style="min-height:90px"></textarea>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">状态</div>
+      <select class="modal-select" id="mq-status">
+        <option value="todo">🟡 待探索</option>
+        <option value="done">🟢 已理解</option>
+        <option value="doubt">🔴 存疑</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('modal-add-question')">取消</button>
+      <button class="modal-btn confirm" onclick="confirmAddQuestion()">记录</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTEXT PANEL (右侧关联面板) ===== -->
+<div class="ctx-panel" id="ctx-panel">
+  <div class="ctx-hd">
+    <div class="ctx-title" id="ctx-panel-title">关联节点</div>
+    <button class="ctx-close" onclick="closeCtx()">✕</button>
+  </div>
+  <div class="ctx-body" id="ctx-panel-body">
+    <div class="ctx-empty">点击研究方向或范式转变卡片上的「🗺️ 分析地图」按钮查看关联</div>
+  </div>
+</div>
+
+<!-- ===== NOTEBOOK DRAWER ===== -->
+<div class="nb-drawer" id="nb-drawer">
+  <div class="nb-hd">
+    <div class="nb-title" id="nb-title">笔记</div>
+    <button class="nb-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="nb-tabs">
+    <div class="nb-tab active" onclick="switchNbTab('preview',this)">👁 预览</div>
+    <div class="nb-tab" onclick="switchNbTab('edit',this)">✏️ 编辑</div>
+  </div>
+  <div class="nb-body">
+    <textarea class="nb-editor" id="nb-editor" placeholder="用 Markdown 写笔记…"></textarea>
+    <div class="nb-preview" id="nb-preview" style="display:none"></div>
+  </div>
+  <div class="nb-footer">
+    <button class="nb-save-btn" onclick="saveNote()">保存</button>
+    <div class="nb-status" id="nb-status">未保存</div>
+  </div>
+</div>
+
+<script>
+// ===== TAB SWITCHING =====
+function switchTab(name) {
+// 离开分析地图时自动收起关联面板
+if (name !== 'analysismap') {
+  const ctxPanel = document.getElementById('ctx-panel');
+  if (ctxPanel) ctxPanel.classList.remove('open');
+}
+document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+const panel = document.getElementById('panel-' + name);
+if (panel) panel.classList.add('active');
+document.querySelectorAll('.tab-btn').forEach(b => {
+if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(name)) b.classList.add('active');
+});
+window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ===== ERA TOGGLE =====
+function toggleEra(hd) {
+  hd.classList.toggle('open');
+  const body = hd.nextElementSibling;
+  if (body) body.classList.toggle('open');
+}
+
+// ===== JUMP TO ERA =====
+function jumpEra(id) {
+  switchTab('timeline');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const hd = el.querySelector('.era-hd');
+    const body = el.querySelector('.era-body');
+    if (hd && !hd.classList.contains('open')) {
+      hd.classList.add('open');
+      if (body) body.classList.add('open');
+    }
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+// ===== JUMP TO EVENT CARD =====
+// 用法：@ev-图灵测试  → 跳到历史演进里标题含"图灵测试"的 ev-card
+function jumpEvent(name) {
+  switchTab('timeline');
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.ev-card');
+    for (const card of cards) {
+      const titleEl = card.querySelector('.ev-title');
+      if (titleEl && titleEl.textContent.includes(name)) {
+        // 确保父级 era-body 已展开
+        const eraBody = card.closest('.era-body');
+        const eraHd = card.closest('.era-block') && card.closest('.era-block').querySelector('.era-hd');
+        if (eraBody && !eraBody.classList.contains('open')) {
+          eraBody.classList.add('open');
+          if (eraHd) eraHd.classList.add('open');
+        }
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.outline = '2px solid var(--accent2)';
+          card.style.transition = 'outline 0.3s';
+          setTimeout(() => { card.style.outline = ''; }, 1800);
+        }, 80);
+        return;
+      }
+    }
+    // 没找到事件卡片时，降级到词汇表搜索
+    jumpGlossary(name);
+  }, 80);
+}
+
+// ===== GLOSSARY FILTER =====
+function filterGloss(cat, btn) {
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.g-card').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+// ===== GLOBAL SEARCH =====
+function globalSearch(q) {
+  if (!q) {
+    document.querySelectorAll('.g-card').forEach(c => c.style.display = '');
+    return;
+  }
+  const lq = q.toLowerCase();
+  switchTab('glossary');
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.g-card').forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(lq) ? '' : 'none';
+  });
+}
+
+// ===== @TAG PARSER =====
+// 将文本中的 @tag 转换为可点击链接
+// @era-1950      → jumpEra，跳到历史演进时代块
+// @ev-图灵测试   → jumpEvent，跳到历史演进具体事件卡片
+// @图灵测试      → jumpGlossary，跳到核心概念词汇表
+function parseAtTags(text) {
+  if (!text) return '';
+  // 先转义HTML
+  const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // @era-xxxx → jumpEra
+  const withEra = escaped.replace(/@(era-[\w]+)/g, (m, id) =>
+    `<span class="at-link" onclick="jumpEra('${id}')">${m}</span>`);
+  // @ev-xxx → jumpEvent（跳到历史演进事件卡片）
+  const withEv = withEra.replace(/@(ev-[^\s@<>，。！？,.!?]+)/g, (m, raw) => {
+    const name = raw.slice(3); // 去掉 "ev-" 前缀
+    return `<span class="at-link" onclick="jumpEvent('${name}')">@${name}</span>`;
+  });
+  // @概念名（普通名称）→ jumpGlossary
+  const withAll = withEv.replace(/@([^\s@<>，。！？,.!?]+)/g, (m, name) => {
+    if (name.startsWith('era-') || name.startsWith('ev-')) return m; // 已处理
+    return `<span class="at-link" onclick="jumpGlossary('${name}')">${m}</span>`;
+  });
+  return withAll;
+}
+
+// 跳转到Glossary中的某个概念
+function jumpGlossary(name) {
+  switchTab('glossary');
+  // 先重置过滤器到「全部」，确保所有卡片可见
+  const allBtn = document.querySelector('#gloss-filters .f-btn');
+  if (allBtn) filterGloss('all', allBtn);
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.g-card');
+    for (const card of cards) {
+      const term = card.querySelector('.g-term');
+      if (term && term.textContent.trim().includes(name)) {
+        card.style.display = ''; // 确保可见
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.boxShadow = '0 0 0 2px var(--accent2)';
+        setTimeout(() => card.style.boxShadow = '', 1800);
+        return;
+      }
+    }
+  }, 80);
+}
+
+// ===== GLOSSARY STORAGE =====
+const GLS_KEY = 'ai_kg_glossary_user';
+
+function loadUserGlossary() {
+  try { return JSON.parse(localStorage.getItem(GLS_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveUserGlossary(list) {
+  localStorage.setItem(GLS_KEY, JSON.stringify(list));
+}
+
+// 渲染用户自定义Glossary卡片
+function renderUserGlossary() {
+  const list = loadUserGlossary();
+  // 移除旧的用户卡片
+  document.querySelectorAll('.g-card[data-user]').forEach(c => c.remove());
+  const grid = document.getElementById('gloss-grid');
+  list.forEach((item, idx) => {
+    const card = buildGlossCard(item, idx, true);
+    grid.appendChild(card);
+  });
+}
+
+function buildGlossCard(item, idx, isUser) {
+  const card = document.createElement('div');
+  card.className = 'g-card';
+  card.dataset.cat = item.cat || '其他';
+  if (isUser) card.dataset.user = '1';
+  card.dataset.idx = idx;
+
+  const noteHtml = item.note ? `<div class="g-note" data-raw="${item.note.replace(/"/g,'&quot;')}">${parseAtTags(item.note)}</div>` : '';
+  const userBadge = isUser ? `<span class="g-user-badge">我添加</span>` : '';
+
+  card.innerHTML = `
+    <div class="g-card-actions">
+      <button class="g-act-btn" onclick="editGlossCard(this)">编辑</button>
+      <button class="g-act-btn danger" onclick="deleteGlossCard(this)">删除</button>
+    </div>
+    <div class="g-term">${item.term}${userBadge}</div>
+    <div class="g-en">${item.en || ''}</div>
+    <div class="g-desc">${parseAtTags(item.desc || '')}</div>
+    ${noteHtml}
+    <div class="g-tag">${item.cat || '其他'}</div>`;
+  return card;
+}
+
+// 给已有的内置卡片加上编辑/删除按钮
+function initBuiltinGlossCards() {
+  document.querySelectorAll('.g-card:not([data-user])').forEach((card, idx) => {
+    if (card.querySelector('.g-card-actions')) return;
+    const actions = document.createElement('div');
+    actions.className = 'g-card-actions';
+    actions.innerHTML = `<button class="g-act-btn" onclick="editGlossCard(this)">编辑</button>`;
+    card.insertBefore(actions, card.firstChild);
+    card.dataset.builtin = idx;
+  });
+// 给内置卡片的 g-note 解析 @tag，同时保存原始文本到 data-raw
+document.querySelectorAll('.g-card:not([data-user]) .g-note').forEach(el => {
+  const raw = el.textContent;
+  el.dataset.raw = raw;
+  el.innerHTML = parseAtTags(raw);
+});
+}
+
+// 编辑卡片（内联编辑）
+function editGlossCard(btn) {
+  const card = btn.closest('.g-card');
+  if (card.classList.contains('editing')) return;
+  card.classList.add('editing');
+
+  const termEl = card.querySelector('.g-term');
+  const enEl = card.querySelector('.g-en');
+  const descEl = card.querySelector('.g-desc');
+  const noteEl = card.querySelector('.g-note');
+  const tagEl = card.querySelector('.g-tag');
+
+  // 保存原始文本
+  const orig = {
+    term: termEl ? termEl.childNodes[0].textContent.trim() : '',
+    en: enEl ? enEl.textContent.trim() : '',
+    desc: descEl ? descEl.textContent.trim() : '',
+    note: noteEl ? (noteEl.dataset.raw || noteEl.textContent.trim()) : '',
+    cat: tagEl ? tagEl.textContent.trim() : ''
+  };
+
+  // 变为可编辑
+  if (termEl) { termEl.childNodes[0].textContent = ''; termEl.insertAdjacentHTML('afterbegin', `<span class="g-editable" contenteditable="true">${orig.term}</span>`); }
+  if (enEl) enEl.innerHTML = `<span class="g-editable" contenteditable="true">${orig.en}</span>`;
+  if (descEl) descEl.innerHTML = `<span class="g-editable" contenteditable="true" style="display:block;width:100%">${orig.desc}</span>`;
+
+  // note 用 textarea
+  if (noteEl) {
+    noteEl.innerHTML = `<textarea class="g-edit-note">${orig.note.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>`;
+  } else {
+    // 没有note则插入一个
+    const ta = document.createElement('textarea');
+    ta.className = 'g-edit-note';
+    ta.placeholder = '添加桥接注释（支持 @era-xxx、@概念名）';
+    card.insertBefore(ta, tagEl);
+  }
+
+  // 工具栏
+  const toolbar = document.createElement('div');
+  toolbar.className = 'g-toolbar';
+  toolbar.innerHTML = `
+    <button class="g-toolbar-btn primary" onclick="saveGlossEdit(this)">保存</button>
+    <button class="g-toolbar-btn" onclick="cancelGlossEdit(this,${JSON.stringify(orig).replace(/"/g,'&quot;')})">取消</button>`;
+  card.appendChild(toolbar);
+
+  btn.style.display = 'none';
+}
+
+function saveGlossEdit(btn) {
+  const card = btn.closest('.g-card');
+  const termSpan = card.querySelector('.g-term .g-editable');
+  const enSpan = card.querySelector('.g-en .g-editable');
+  const descSpan = card.querySelector('.g-desc .g-editable');
+  const noteTA = card.querySelector('.g-edit-note');
+  const tagEl = card.querySelector('.g-tag');
+
+  const newTerm = termSpan ? termSpan.textContent.trim() : '';
+  const newEn = enSpan ? enSpan.textContent.trim() : '';
+  const newDesc = descSpan ? descSpan.textContent.trim() : '';
+  const newNote = noteTA ? noteTA.value.trim() : '';
+  const newCat = tagEl ? tagEl.textContent.trim() : '';
+
+  // 如果是用户卡片，更新localStorage
+  if (card.dataset.user) {
+    const list = loadUserGlossary();
+    const idx = parseInt(card.dataset.idx);
+    if (list[idx]) {
+      list[idx] = { term: newTerm, en: newEn, desc: newDesc, note: newNote, cat: newCat };
+      saveUserGlossary(list);
+    }
+  }
+
+  // 重建卡片内容
+  const termEl = card.querySelector('.g-term');
+  if (termEl) { termEl.innerHTML = newTerm + (card.dataset.user ? '<span class="g-user-badge">我添加</span>' : ''); }
+  const enEl = card.querySelector('.g-en');
+  if (enEl) enEl.textContent = newEn;
+  const descEl = card.querySelector('.g-desc');
+  if (descEl) descEl.innerHTML = parseAtTags(newDesc);
+
+  // 处理note
+  let noteEl = card.querySelector('.g-note');
+  if (newNote) {
+    if (!noteEl) {
+      noteEl = document.createElement('div');
+      noteEl.className = 'g-note';
+      card.insertBefore(noteEl, card.querySelector('.g-tag'));
+    }
+    noteEl.dataset.raw = newNote;
+    noteEl.innerHTML = parseAtTags(newNote);
+  } else if (noteEl) {
+    noteEl.remove();
+  }
+
+  card.dataset.cat = newCat;
+  card.classList.remove('editing');
+  card.querySelector('.g-toolbar').remove();
+  const editBtn = card.querySelector('.g-act-btn');
+  if (editBtn) editBtn.style.display = '';
+}
+
+function cancelGlossEdit(btn, orig) {
+  const card = btn.closest('.g-card');
+  const termEl = card.querySelector('.g-term');
+  if (termEl) termEl.innerHTML = orig.term + (card.dataset.user ? '<span class="g-user-badge">我添加</span>' : '');
+  const enEl = card.querySelector('.g-en');
+  if (enEl) enEl.textContent = orig.en;
+  const descEl = card.querySelector('.g-desc');
+  if (descEl) descEl.innerHTML = parseAtTags(orig.desc);
+  let noteEl = card.querySelector('.g-note');
+  if (orig.note) {
+    if (!noteEl) { noteEl = document.createElement('div'); noteEl.className = 'g-note'; card.insertBefore(noteEl, card.querySelector('.g-tag')); }
+    noteEl.innerHTML = parseAtTags(orig.note);
+  } else if (noteEl) noteEl.remove();
+  card.classList.remove('editing');
+  card.querySelector('.g-toolbar').remove();
+  const editBtn = card.querySelector('.g-act-btn');
+  if (editBtn) editBtn.style.display = '';
+}
+
+function deleteGlossCard(btn) {
+  const card = btn.closest('.g-card');
+  if (!card.dataset.user) return;
+  if (!confirm('确认删除这个概念？')) return;
+  const list = loadUserGlossary();
+  const idx = parseInt(card.dataset.idx);
+  list.splice(idx, 1);
+  saveUserGlossary(list);
+  renderUserGlossary();
+}
+
+// ===== ADD GLOSSARY MODAL =====
+function openAddGlossary() {
+  ['mg-term','mg-en','mg-desc','mg-note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('mg-cat').value = '数学基础';
+  document.getElementById('modal-add-glossary').classList.add('open');
+  setTimeout(() => document.getElementById('mg-term').focus(), 200);
+}
+
+function confirmAddGlossary() {
+  const term = document.getElementById('mg-term').value.trim();
+  if (!term) { alert('请填写术语名称'); return; }
+  const item = {
+    term,
+    en: document.getElementById('mg-en').value.trim(),
+    cat: document.getElementById('mg-cat').value,
+    desc: document.getElementById('mg-desc').value.trim(),
+    note: document.getElementById('mg-note').value.trim()
+  };
+  const list = loadUserGlossary();
+  list.push(item);
+  saveUserGlossary(list);
+  renderUserGlossary();
+  closeModal('modal-add-glossary');
+}
+
+// ===== EXPORT / IMPORT GLOSSARY =====
+function exportGlossary() {
+  const builtin = [];
+  document.querySelectorAll('.g-card:not([data-user])').forEach(card => {
+    builtin.push({
+      term: card.querySelector('.g-term') ? card.querySelector('.g-term').childNodes[0].textContent.trim() : '',
+      en: card.querySelector('.g-en') ? card.querySelector('.g-en').textContent.trim() : '',
+      cat: card.dataset.cat || '',
+      desc: card.querySelector('.g-desc') ? card.querySelector('.g-desc').textContent.trim() : '',
+      note: card.querySelector('.g-note') ? card.querySelector('.g-note').textContent.trim() : ''
+    });
+  });
+  const user = loadUserGlossary();
+  const data = { builtin, user, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ai_glossary_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function importGlossary(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const user = data.user || (Array.isArray(data) ? data : []);
+      if (!confirm(`导入 ${user.length} 条用户概念？（将合并到现有数据）`)) return;
+      const existing = loadUserGlossary();
+      const merged = [...existing, ...user];
+      saveUserGlossary(merged);
+      renderUserGlossary();
+      alert('导入成功！');
+    } catch(err) { alert('文件格式错误：' + err.message); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ===== MODAL UTILS =====
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// 点击遮罩关闭
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// ===== NOTEBOOK DRAWER =====
+let nbCurrentKey = '';
+
+const NB_TEMPLATE = [
+  '## 我的笔记',
+  '',
+  '**核心概念：**',
+  '',
+  '',
+  '**我的理解：**',
+  '',
+  '',
+  '**疑问：**',
+  '',
+  '',
+  '**桥接到其他概念或应用领域：**',
+  '',
+  ''
+].join('\n');
+
+function openDrawer(key, title) {
+  nbCurrentKey = 'nb_' + key;
+  document.getElementById('nb-title').textContent = title;
+  const saved = localStorage.getItem(nbCurrentKey) || '';
+  const editor = document.getElementById('nb-editor');
+  editor.removeAttribute('disabled');
+  editor.removeAttribute('readonly');
+  editor.value = saved || NB_TEMPLATE;
+  document.getElementById('nb-status').textContent = saved ? '已保存' : '使用模板';
+  // 有已保存内容时默认预览，否则默认编辑
+  const tabs = document.querySelectorAll('.nb-tab');
+  if (saved) {
+    switchNbTab('preview', tabs[0]);
+  } else {
+    switchNbTab('edit', tabs[1]);
+    setTimeout(function() { editor.focus(); editor.setSelectionRange(0, 0); }, 300);
+  }
+  document.getElementById('nb-drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('nb-drawer').classList.remove('open');
+}
+
+function switchNbTab(mode, btn) {
+  document.querySelectorAll('.nb-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const editor = document.getElementById('nb-editor');
+  const preview = document.getElementById('nb-preview');
+  if (mode === 'edit') {
+    editor.style.display = '';
+    preview.style.display = 'none';
+  } else {
+    editor.style.display = 'none';
+    preview.style.display = '';
+    preview.innerHTML = renderMarkdown(editor.value);
+  }
+}
+
+function saveNote() {
+  if (!nbCurrentKey) return;
+  localStorage.setItem(nbCurrentKey, document.getElementById('nb-editor').value);
+  const status = document.getElementById('nb-status');
+  status.textContent = '已保存 ' + new Date().toLocaleTimeString();
+}
+
+function renderMarkdown(md) {
+  if (!md) return '';
+  let html = md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\_(.+?)\_/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, s => '<ul>' + s + '</ul>')
+    .replace(/\n{2,}/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  // wrap loose text in p
+  html = '<p>' + html + '</p>';
+  // parse @tags
+  html = html.replace(/@(era-[\w]+)/g, (_, tag) =>
+    `<span class="at-link" onclick="jumpEra('${tag}')">${'@'+tag}</span>`
+  ).replace(/@([^\s@<>，。！？,.!?]+)/g, (_, name) =>
+    `<span class="at-link" onclick="jumpGlossary('${name}')">${'@'+name}</span>`
+  );
+  return html;
+}
+
+// Add ✍️ button to every ev-card on page load
+function injectNbButtons() {
+  document.querySelectorAll('.ev-card').forEach((card, i) => {
+    if (card.querySelector('.nb-card-btn')) return;
+    const titleEl = card.querySelector('.ev-title');
+    const title = titleEl ? titleEl.textContent.trim().slice(0,30) : ('卡片' + i);
+    const key = 'evcard_' + i;
+    card.dataset.nbKey = key;
+    const btn = document.createElement('button');
+    btn.className = 'nb-card-btn';
+    btn.textContent = '✍️ 笔记';
+    btn.onclick = (e) => { e.stopPropagation(); openDrawer(key, title); };
+    card.appendChild(btn);
+    // show dot if note exists
+    if (localStorage.getItem('nb_' + key)) {
+      btn.textContent = '✍️ 笔记●';
+      btn.style.color = 'var(--accent3)';
+    }
+  });
+}
+
+
+// ===== ANALYSIS MAP =====
+function toggleAmCase(hd) {
+  const body = hd.nextElementSibling;
+  const isOpen = hd.classList.contains('open');
+  hd.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// ===== MY QUESTIONS =====
+const Q_KEY = 'ai_kg_questions';
+
+function loadQuestions() {
+  try { return JSON.parse(localStorage.getItem(Q_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveQuestions(list) {
+  localStorage.setItem(Q_KEY, JSON.stringify(list));
+}
+
+const Q_STATUS_LABEL = { todo: '🟡 待探索', done: '🟢 已理解', doubt: '🔴 存疑' };
+
+function renderQuestions(filter) {
+  const list = loadQuestions();
+  const container = document.getElementById('q-list');
+  if (!container) return;
+  const empty = document.getElementById('q-empty');
+  const filtered = (filter && filter !== 'all') ? list.filter(q => q.status === filter) : list;
+  container.querySelectorAll('.q-card').forEach(c => c.remove());
+  if (filtered.length === 0) { if (empty) empty.style.display = ''; return; }
+  if (empty) empty.style.display = 'none';
+  filtered.forEach(q => {
+    const realIdx = list.indexOf(q);
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.dataset.status = q.status || 'todo';
+    const statusCls = q.status || 'todo';
+    const dateStr = q.date ? new Date(q.date).toLocaleDateString('zh-CN') : '';
+    card.innerHTML = `
+      <div class="q-card-hd">
+        <span class="q-status ${statusCls}">${Q_STATUS_LABEL[statusCls]}</span>
+        <div class="q-text">${parseAtTags(q.text)}</div>
+        <div class="q-actions">
+          <select class="q-act" onchange="changeQStatus(${realIdx},this.value)">
+            <option value="todo" ${q.status==='todo'?'selected':''}>待探索</option>
+            <option value="done" ${q.status==='done'?'selected':''}>已理解</option>
+            <option value="doubt" ${q.status==='doubt'?'selected':''}>存疑</option>
+          </select>
+          <button class="q-act del" onclick="deleteQuestion(${realIdx})">删除</button>
+        </div>
+      </div>
+      ${dateStr ? `<div class="q-meta"><span class="q-date">${dateStr}</span></div>` : ''}`;
+    container.appendChild(card);
+  });
+}
+
+function filterQ(status, btn) {
+  document.querySelectorAll('.q-f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.q-card').forEach(c => {
+    c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
+  });
+}
+
+function openAddQuestion() {
+  document.getElementById('mq-text').value = '';
+  document.getElementById('mq-status').value = 'todo';
+  document.getElementById('modal-add-question').classList.add('open');
+  setTimeout(() => document.getElementById('mq-text').focus(), 200);
+}
+
+function confirmAddQuestion() {
+  const text = document.getElementById('mq-text').value.trim();
+  if (!text) { alert('请填写问题内容'); return; }
+  const list = loadQuestions();
+  list.unshift({ text, status: document.getElementById('mq-status').value, date: Date.now() });
+  saveQuestions(list);
+  renderQuestions();
+  closeModal('modal-add-question');
+}
+
+function changeQStatus(idx, status) {
+  const list = loadQuestions();
+  if (list[idx]) { list[idx].status = status; saveQuestions(list); renderQuestions(); }
+}
+
+function deleteQuestion(idx) {
+  if (!confirm('确认删除这个问题？')) return;
+  const list = loadQuestions();
+  list.splice(idx, 1);
+  saveQuestions(list);
+  renderQuestions();
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  // 默认展开最新时代块（2024），其余折叠
+  const latestId = 'era-2024';
+  const latest = document.getElementById(latestId);
+  if (latest) {
+    const hd = latest.querySelector('.era-hd');
+    const body = latest.querySelector('.era-body');
+    if (hd) hd.classList.add('open');
+    if (body) body.classList.add('open');
+    setTimeout(() => {
+      latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  }
+
+  // 侧边栏滚动高亮跟随
+  const eraIds = ['era-1950','era-1980','era-1990','era-2006','era-2012','era-2017','era-2020','era-2022','era-2024'];
+  const sbItems = document.querySelectorAll('.sidebar .sb-item[onclick^="jumpEra"]');
+  function updateSidebarActive() {
+    let activeIdx = 0;
+    eraIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.getBoundingClientRect().top <= 120) activeIdx = i;
+    });
+    sbItems.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+  }
+  const contentEl = document.querySelector('.content');
+  if (contentEl) contentEl.addEventListener('scroll', updateSidebarActive, { passive: true });
+  window.addEventListener('scroll', updateSidebarActive, { passive: true });
+  updateSidebarActive();
+
+  // 初始化 Glossary 用户数据
+  initBuiltinGlossCards();
+  renderUserGlossary();
+  // 注入笔记按钮
+  injectNbButtons();
+  // 初始化问题列表
+  renderQuestions();
+
+  // 点击模态框遮罩关闭
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) overlay.classList.remove('open');
+    });
+  });
+});
+
+// ===== PERSONS TAB =====
+function togglePerson(card) {
+  const isOpen = card.classList.contains('open');
+  // 关闭所有
+  document.querySelectorAll('.person-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+function jumpPerson(id) {
+  switchTab('persons');
+  setTimeout(() => {
+    const el = document.getElementById('person-' + id);
+    if (!el) return;
+    // 关闭其他，展开目标
+    document.querySelectorAll('.person-card.open').forEach(c => c.classList.remove('open'));
+    el.classList.add('open');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.outline = '2px solid var(--accent2)';
+    setTimeout(() => { el.style.outline = ''; }, 1800);
+  }, 80);
+}
+
+function filterPersons(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.person-card').forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(lq) ? '' : 'none';
+  });
+}
+
+function filterPersonsByTag(tag, btn) {
+  document.querySelectorAll('.persons-filter .f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.person-card').forEach(c => {
+    if (tag === 'all') { c.style.display = ''; return; }
+    c.style.display = (c.dataset.tags || '').includes(tag) ? '' : 'none';
+  });
+}
+
+// ===== CONTEXT PANEL =====
+const CTX_DATA = {
+  // 研究方向
+  cv: {
+    title: '计算机视觉 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔗', title: '连接主义', sub: '视觉特征不需要手工设计，CNN从数据中自动学习层次化表示，是连接主义的核心体现' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🌐', title: '完全可观测', sub: '图像分类：输入即完整状态，无隐藏信息' },
+        { icon: '🔄', title: '确定性环境', sub: '同一张图片每次推理结果相同' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序02 基于模型的反射', sub: 'CNN：感知输入→提取特征→输出分类，端到端映射，无需规划' }
+      ]}
+    ]
+  },
+  rl: {
+    title: '强化学习 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🎯', title: '理性行动（Russell押注）', sub: 'RL是"理性行动"哲学的直接实现：智能体通过与环境交互，学习最大化期望累积奖励的策略' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🎲', title: '随机性环境', sub: '环境状态转移有概率性，需要期望效用而非确定性规划' },
+        { icon: '👁️', title: '部分可观测', sub: '真实世界RL（如自动驾驶）通常只能观测到部分状态' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '⚖️', title: '程序04 基于效用', sub: '效用函数 = 奖励函数；期望效用最大化 = 最大化累积奖励。RLHF中效用函数由人类偏好定义' }
+      ]}
+    ]
+  },
+  agent: {
+    title: 'AI Agent × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🎯', title: '理性行动', sub: 'Agent是Russell"理性行动"哲学的终极形态：感知环境、规划行动、使用工具、达成目标' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🌍', title: '动态 + 部分可观测', sub: '真实世界环境持续变化，Agent只能通过工具调用获取局部信息' },
+        { icon: '🤝', title: '多智能体', sub: '多Agent协作系统：每个Agent感知其他Agent的行动作为环境的一部分' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '⚖️', title: '程序04 基于效用', sub: 'LLM-Agent：用语言模型作为效用评估器，规划多步行动序列以最大化任务完成度' }
+      ]}
+    ]
+  },
+  // 范式转变
+  paradigm01: {
+    title: '符号→连接主义 × 分析地图',
+    anchor: 'fmap-l1',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔤', title: '符号主义：像人类一样思考', sub: '专家系统：用逻辑规则显式编码知识，模拟人类推理过程' },
+        { icon: '🔗', title: '连接主义：像人类一样行动', sub: '神经网络：从数据中隐式学习，不需要人类显式编码知识' }
+      ]},
+      { label: '核心颠覆', items: [
+        { icon: '💡', title: '知识表示的革命', sub: '从"知识 = 规则"到"知识 = 权重"。这是L1四大哲学中最根本的分裂点' }
+      ]}
+    ]
+  },
+  paradigm05: {
+    title: '对齐导向 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '架构类型（L4）', items: [
+        { icon: '⚖️', title: '程序04 基于效用', sub: 'RLHF的本质：用人类偏好定义效用函数，让模型学习最大化"对人类有益"的期望效用' }
+      ]},
+      { label: '深层联系', items: [
+        { icon: '🎯', title: '对齐 = 效用函数设计问题', sub: 'Russell在AIMA中早已指出：AI安全的核心是"如何正确定义效用函数"。RLHF是目前最实用的答案' }
+      ]}
+    ]
+  },
+  // 研究方向补充
+  nlp: {
+    title: '自然语言处理 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔗', title: '连接主义 + 理性行动', sub: 'NLP从规则系统（符号主义）演进到神经网络（连接主义），RLHF阶段进一步引入理性行动哲学：让模型学习"对人类有益"的行为' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🌐', title: '完全可观测 + 确定性', sub: '文本分类/翻译：输入序列即完整状态，输出确定。对话系统则引入部分可观测性（用户意图未知）' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序03 目标导向 → 程序04 基于效用', sub: 'BERT/GPT：目标导向（完成特定NLP任务）。ChatGPT/RLHF：基于效用（最大化人类满意度），是NLP架构的最新演进' }
+      ]}
+    ]
+  },
+  gen: {
+    title: '生成模型 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔗', title: '连接主义', sub: 'GAN/VAE/扩散模型都是纯连接主义的产物：通过大量数据训练，让神经网络学习数据分布，无需任何显式规则' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🎲', title: '随机性 + 连续空间', sub: '生成模型的核心是对连续概率分布建模：VAE的潜在空间、扩散模型的去噪过程，都在连续随机环境中运作' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序02 基于模型的反射', sub: '生成模型本质是"世界模型"：学习数据的内部表示（潜在空间），再从该表示生成新样本。是L4程序02的典型实现' }
+      ]}
+    ]
+  },
+  multimodal: {
+    title: '多模态与科学AI × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔗', title: '连接主义的统一野心', sub: 'Transformer架构的模态无关性：同一套注意力机制可以处理文本、图像、音频。这是连接主义"统一表示"理念的最高体现' }
+      ]},
+      { label: '环境维度（L3）', items: [
+        { icon: '🌐', title: '多模态 = 多感知通道', sub: 'CLIP：图文对比学习，将不同模态映射到同一语义空间。GPT-4V：视觉+语言联合推理，模拟人类多感官认知' }
+      ]},
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序03 目标导向', sub: 'AlphaFold2：以"预测蛋白质结构"为明确目标，结合进化信息与注意力机制，是目标导向架构在科学AI中的里程碑' }
+      ]}
+    ]
+  },
+  // 范式转变补充
+  paradigm02: {
+    title: '手工特征→深度特征 × 分析地图',
+    anchor: 'fmap-l1',
+    sections: [
+      { label: '研究哲学（L1）', items: [
+        { icon: '🔗', title: '连接主义的决定性胜利', sub: 'AlexNet证明：连接主义（端到端学习）在特征提取上全面超越了符号主义（手工设计特征）。这是L1哲学之争的实证分水岭' }
+      ]},
+      { label: '核心颠覆', items: [
+        { icon: '💡', title: '特征工程的终结', sub: '从"人类设计特征 + 简单分类器"到"原始数据 + 深度网络"。GPU+大数据+深度架构的组合，使自动学习的特征质量超越人工设计' }
+      ]}
+    ]
+  },
+  paradigm03: {
+    title: '任务专用→预训练微调 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序03 目标导向的规模化', sub: 'BERT/GPT：预训练阶段学习通用语言表示（目标：预测掩码词/下一个词），微调阶段适配具体任务。是目标导向架构的规模化实现' }
+      ]},
+      { label: '核心颠覆', items: [
+        { icon: '💡', title: '无标注数据的价值革命', sub: 'Transformer自监督预训练使互联网上的海量无标注文本成为训练资源。知识从"标注数据"转移到"模型权重"' }
+      ]}
+    ]
+  },
+  paradigm04: {
+    title: '微调范式→提示词范式 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '架构类型（L4）', items: [
+        { icon: '🏗️', title: '程序04 基于效用的涌现', sub: 'GPT-3的In-context Learning：无需更新参数，通过提示词中的示例即可完成新任务。模型使用方式从"训练"变为"提示"，效用函数由提示词隐式定义' }
+      ]},
+      { label: '核心颠覆', items: [
+        { icon: '💡', title: '规模定律带来的涌现能力', sub: '参数量超过临界值后，模型自发涌现出少样本学习能力。提示词工程成为新的"编程语言"，降低了AI应用门槛' }
+      ]}
+    ]
+  },
+  paradigm06: {
+    title: '训练时扩展→推理时扩展 × 分析地图',
+    anchor: 'fmap-arch04',
+    sections: [
+      { label: '架构类型（L4）', items: [
+        { icon: '⚖️', title: '程序04 基于效用 + 搜索', sub: 'o1/R1：推理时通过思维链（CoT）和蒙特卡洛树搜索（MCTS）扩展计算，在效用函数指导下搜索最优推理路径' }
+      ]},
+      { label: '核心颠覆', items: [
+        { icon: '💡', title: 'Test-time Compute：第三个扩展维度', sub: '继参数量、数据量之后，推理时计算成为第三个可扩展维度。复杂推理任务不再需要更大的模型，而是更多的"思考时间"' }
+      ]}
+    ]
+  }
+};
+
+function showCtx(key, anchorOverride) {
+  const data = CTX_DATA[key];
+  const panel = document.getElementById('ctx-panel');
+  const title = document.getElementById('ctx-panel-title');
+  const body = document.getElementById('ctx-panel-body');
+  if (!data) {
+    title.textContent = '关联节点';
+    body.innerHTML = '<div class="ctx-empty">暂无详细关联数据</div>';
+  } else {
+    title.textContent = data.title;
+    let html = '';
+    data.sections.forEach(sec => {
+      html += `<div class="ctx-section"><div class="ctx-sec-lbl">${sec.label}</div>`;
+      sec.items.forEach(item => {
+        html += `<div class="ctx-item"><div class="ctx-item-icon">${item.icon}</div>
+          <div class="ctx-item-body">
+            <div class="ctx-item-title">${item.title}</div>
+            <div class="ctx-item-sub">${item.sub}</div>
+          </div></div>`;
+      });
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  }
+  panel.classList.add('open');
+  // 同时跳转到分析地图对应锚点
+  const anchor = anchorOverride || (data && data.anchor);
+  if (anchor) {
+    switchTab('analysismap');
+    setTimeout(() => {
+      const el = document.getElementById(anchor);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.outline = '2px solid var(--accent2)';
+      setTimeout(() => { el.style.outline = ''; }, 1800);
+    }, 80);
+  }
+}
+
+function closeCtx() {
+  document.getElementById('ctx-panel').classList.remove('open');
+}
+
+// ===== 分析地图精确跳转（无面板版，用于人物志等不需要解释的场景）=====
+function jumpFmapArch04() {
+  switchTab('analysismap');
+  setTimeout(() => {
+    const el = document.getElementById('fmap-arch04');
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.outline = '2px solid var(--accent2)';
+    setTimeout(() => { el.style.outline = ''; }, 1800);
+  }, 80);
+}
+
+function jumpFmapL1() {
+  switchTab('analysismap');
+  setTimeout(() => {
+    const el = document.getElementById('fmap-l1');
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.style.outline = '2px solid var(--accent)';
+    setTimeout(() => { el.style.outline = ''; }, 1800);
+  }, 80);
+}
+</script>
+</body>
+</html>
